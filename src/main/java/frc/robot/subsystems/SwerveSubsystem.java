@@ -157,6 +157,10 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("leftRear", leftRearModule.getDrivePosition());
         SmartDashboard.putNumber("rightFront", rightFrontModule.getDrivePosition());
         SmartDashboard.putNumber("rigthRear", rightRearModule.getDrivePosition());
+        SmartDashboard.putNumber("LFA", leftFrontModule.getTurningPosition());
+        SmartDashboard.putNumber("LRA", leftRearModule.getTurningPosition());
+        SmartDashboard.putNumber("RFA", rightFrontModule.getTurningPosition());
+        SmartDashboard.putNumber("RRA", rightRearModule.getTurningPosition());
         SmartDashboard.putNumber("RRMP", rightRearModule.getTurnintEncoderPosition());
         SmartDashboard.putNumber("RFMP", rightFrontModule.getTurnintEncoderPosition());
         SmartDashboard.putNumber("LFMP", leftFrontModule.getTurnintEncoderPosition());

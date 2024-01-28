@@ -125,7 +125,7 @@ public class ArmSubsystem extends SubsystemBase {
     armAngle = armCancoder.getPosition().getValueAsDouble();
     armAngularVelocity = armEncoder.getVelocity()*toAngularVelocity;
     armRadians = Math.toRadians(armAngle);
-    armAimSetpoint = -90 + Math.toDegrees(Math.atan((distance + limelightToArmDistance)/(speakerHeight - armHeight)));
+    armAimSetpoint = -90 + Math.toDegrees(Math.atan((distance + limelightToArmDistance)/(speakerHeight - armHeight))) + (180 - armAndEndEffectorAngle);
     armErrorValue = Math.abs(armSetpoint - armAngle);
 
     armFeedforwardOutput = armFeedforward.calculate(armRadians, armAngularVelocity)/12;

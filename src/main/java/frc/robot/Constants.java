@@ -57,8 +57,9 @@ public final class Constants {
     public static final double ampYSetpoint = 0.0;
     public static final double ampZSetpoint = 0.0;
     public static final double speakerHeight = 204.5;//cm
-    public static final double armHeight = 0;
+    public static final double armHeight = 28.16;//cm
     public static final double limelightToArmDistance = 0;
+    public static final double armAndEndEffectorAngle = 120.0;
   }
 
   public static final class SwerveModuleConstants{

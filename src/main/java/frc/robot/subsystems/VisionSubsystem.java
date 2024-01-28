@@ -91,7 +91,7 @@ public class VisionSubsystem extends SubsystemBase {
     yMovePIDOutput = Constants.setMaxOutput(yMovePIDOutput, maxYMovePIDOutput);
     turnPIDOutput = Constants.setMaxOutput(turnPIDOutput, maxTurnPIDOutput);
    
-    SmartDashboard.putNumber("Yaw", botZValue);
+    SmartDashboard.putNumber("photonZ", botZValue);
     SmartDashboard.putNumber("photonY", botYValue);
     SmartDashboard.putNumber("photonX", botXValue);
     SmartDashboard.putNumber("targetID", targetID);
