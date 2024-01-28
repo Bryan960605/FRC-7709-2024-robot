@@ -5,10 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
-import static frc.robot.Constants.ArmConstants.*;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.OperatorConstants;
 
 public class ArmCommand extends Command {
   /** Creates a new ArmCommand. */
@@ -27,35 +27,35 @@ public class ArmCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    for(int butt = 1;butt<=10;butt++){
-      if(RobotContainer.armJoystick.getRawButton(butt)){
-        button = butt;
-      }
-    }
-    switch (button) {
-      case floorButton:
-        armSubsystem.armPIDCalculate(Constants.ArmConstants.armTaking);
-        mode = "floor";
-        break;
-      case shootButton:
-        armSubsystem.shoot();
-        armSubsystem.armPIDCalculate(armSubsystem.armAimSetpoint);
-        mode = "shoot";
-        break;
-      case primetiveButton:
-        armSubsystem.armPIDCalculate(Constants.ArmConstants.armOrigin);
-        mode = "primetive";
-        break;
-      case takeButton:
-        armSubsystem.take();
-        armSubsystem.armPIDCalculate(Constants.ArmConstants.armTaking);
-        mode = "take";
-        break;
-      default:
-        armSubsystem.armPIDCalculate(armSubsystem.armAimSetpoint);
-        mode = "aim";
-        break;
-    }
+    // for(int butt = 1;butt<=10;butt++){
+    //   if(RobotContainer.armJoystick.getRawButton(butt)){
+    //     button = butt;
+    //   }
+    // }
+    // switch (button) {
+    //   case OperatorConstants.floorButton:
+    //     armSubsystem.armPIDCalculate(ArmConstants.armTaking);
+    //     mode = "floor";
+    //     break;
+    //   case OperatorConstants.shootButton:
+    //     armSubsystem.shoot();
+    //     armSubsystem.armPIDCalculate(armSubsystem.armAimSetpoint);
+    //     mode = "shoot";
+    //     break;
+    //   case OperatorConstants.primetiveButton:
+    //     armSubsystem.armPIDCalculate(ArmConstants.armOrigin);
+    //     mode = "primetive";
+    //     break;
+    //   case OperatorConstants.takeButton:
+    //     armSubsystem.take();
+    //     armSubsystem.armPIDCalculate(ArmConstants.armTaking);
+    //     mode = "take";
+    //     break;
+    //   default:
+    //     armSubsystem.armPIDCalculate(armSubsystem.armAimSetpoint);
+    //     mode = "aim";
+    //     break;
+    // }
   }
 
   // Called once the command ends or is interrupted.

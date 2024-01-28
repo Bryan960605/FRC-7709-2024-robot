@@ -17,34 +17,42 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
+  /* Robot Parameter */
   public static final double robotLength = Units.inchesToMeters(25.5);
   public static final double robotWidth = Units.inchesToMeters(25.5);
-  public static double setMaxOutput(double value, double maxOutput){
-    if(value > maxOutput){
-      return maxOutput;
-    }
-    else if(-value < -maxOutput){
-      return -maxOutput;
-    }
-    else{
-      return value;
-    }
-  }
-
-  public static final class ArmConstants{
-    public static final double armGearRatio = 1/0.0;
-    public static final double armOrigin = 0.908;
-    public static final double armTaking = 0.0;
-
+  /* Operator IO */
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
     public static final int floorButton = 1;
     public static final int shootButton = 2;
     public static final int primetiveButton = 3;
     public static final int takeButton = 4;
   }
-
+  /* Motor Controller CAN ID */
+  public static class MotorControllerIDs{
+    // Intake-Shooter
+    public static final int kShooterMotorLeftID = 3;
+    public static final int kShooterMotorRightID = 4; 
+    public static final int kIntakeMotorID = 5;
+  }
+  /* Digital Input */
+  public static class DigitalInputPin{
+    public static final int kIRsensorDIO = 0;
+    public static final int kLeftClimiberLimitSwitch = 1;
+    public static final int kRightClimiberLimitSwitch = 2;
+  }
+  /* PWM Output */
+  public static class PWMOutputPin{
+    public static final int kLeftClimberServo = 0;
+    public static final int kRightClimberServo = 1;  
+  }
+  /* Arm Constants */
+  public static final class ArmConstants{
+    public static final double armGearRatio = 1/0.0;
+    public static final double armOrigin = 0.908;
+    public static final double armTaking = 0.0;
+  }
+  /* April Tag Constants */
   public static final class ApriltagConstants{
     public static final int redSpeakerID1 = 3;
     public static final int redSpeakerID2 = 4;
@@ -60,7 +68,7 @@ public final class Constants {
     public static final double armHeight = 0;
     public static final double limelightToArmDistance = 0;
   }
-
+  /* Swerve Module Constants */
   public static final class SwerveModuleConstants{
     public static final double wheelDiameter = Units.inchesToMeters(4);
     public static final double driveMotorGearRatio = 1/6.75;
@@ -117,6 +125,12 @@ public final class Constants {
       new Translation2d(robotLength/2, -robotWidth/2), 
       new Translation2d(-robotLength/2, robotWidth/2),
       new Translation2d(-robotLength/2, -robotWidth/2)
-  );
+    );
+  }
+  public static double setMaxOutput(double value, double maxOutput){
+    // return min(maxOutput, max(value, -maxOutput)) 這樣一行或許就可以搞定了
+    if(value > maxOutput) return maxOutput;
+    else if(-value < -maxOutput) return -maxOutput;
+    else return value;
   }
 }
