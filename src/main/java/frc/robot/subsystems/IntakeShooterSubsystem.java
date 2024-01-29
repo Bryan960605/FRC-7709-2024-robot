@@ -9,96 +9,117 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DigitalInputPin;
+import frc.robot.Constants.IntakeShooterConstants;
 import frc.robot.Constants.MotorControllerIDs;
 
 public class IntakeShooterSubsystem extends SubsystemBase {
   // Motor Controller
-  private final CANSparkMax shooterMotorL;
-  private final CANSparkMax shooterMotorR;
+  private final CANSparkMax shooterMotorLead;
+  private final CANSparkMax shooterMotorFollow;
   private final CANSparkMax intakeMotor;
   // NEO encoder
   private final RelativeEncoder leftMotorEncoder;
   private final RelativeEncoder rightMotorEncoder;
   // Note Sensor
   private final DigitalInput IRsensor;
+  // PID controller
+  private final PIDController shooterPidController;
 
   public IntakeShooterSubsystem() {
     /* IR Sensor */
     IRsensor = new DigitalInput(DigitalInputPin.kIRsensorDIO);
     /* Motor Controller Initialize */
-    shooterMotorL = new CANSparkMax(MotorControllerIDs.kShooterMotorLeftID, MotorType.kBrushless); // Leader
-    shooterMotorR = new CANSparkMax(MotorControllerIDs.kShooterMotorRightID, MotorType.kBrushless); // Follower
+    shooterMotorLead = new CANSparkMax(MotorControllerIDs.kShooterMotorLeftID, MotorType.kBrushless); // Leader
+    shooterMotorFollow = new CANSparkMax(MotorControllerIDs.kShooterMotorRightID, MotorType.kBrushless); // Follower
     intakeMotor = new CANSparkMax(MotorControllerIDs.kIntakeMotorID, MotorType.kBrushless);
     // Reset Setting
     intakeMotor.restoreFactoryDefaults();
-    shooterMotorL.restoreFactoryDefaults();
-    shooterMotorR.restoreFactoryDefaults();
+    shooterMotorLead.restoreFactoryDefaults();
+    shooterMotorFollow.restoreFactoryDefaults();
     // Mode Setting
     intakeMotor.setIdleMode(IdleMode.kBrake);
-    shooterMotorL.setIdleMode(IdleMode.kBrake);
-    shooterMotorR.setIdleMode(IdleMode.kBrake);
+    shooterMotorLead.setIdleMode(IdleMode.kBrake);
+    shooterMotorFollow.setIdleMode(IdleMode.kBrake);
     // Inverted
     intakeMotor.setInverted(false);
-    shooterMotorL.setInverted(false);
-    shooterMotorR.setInverted(false);
+    shooterMotorLead.setInverted(false);
+    shooterMotorFollow.setInverted(false);
     // Burn Flash    
     intakeMotor.burnFlash();
-    shooterMotorL.burnFlash();
-    shooterMotorR.burnFlash();
+    shooterMotorLead.burnFlash();
+    shooterMotorFollow.burnFlash();
     // Right motor will follow left motor
-    shooterMotorR.follow(shooterMotorL);
+    shooterMotorFollow.follow(shooterMotorLead);
     // Encoder
-    leftMotorEncoder = shooterMotorL.getEncoder();
-    rightMotorEncoder = shooterMotorR.getEncoder();
+    leftMotorEncoder = shooterMotorLead.getEncoder();
+    rightMotorEncoder = shooterMotorFollow.getEncoder();
+    resetEncoder();
+    // PID Controller
+    shooterPidController = new PIDController(
+      IntakeShooterConstants.kp, 
+      IntakeShooterConstants.ki,
+      IntakeShooterConstants.kd);
   }
 
-  public void Intake(){
+  public void IntakeNote(){
     intakeMotor.set(0.5);
   }
 
-  public void Shoot(){
-    shooterMotorL.set(0.5);
-    shooterMotorR.set(0.5);
-    if(shooterMotorL.getEncoder().getVelocity() > 2900){
-      intakeMotor.set(0.5);
-    }
-    else{
-      intakeMotor.set(0);
-    }
+  public void ShootAMP(){
+    // Calculate PID Output
+    double PidOutput = shooterPidController.calculate(getEncoderSpeed(), IntakeShooterConstants.kAmpRPM);
+    // Enable Shooter
+    shooterMotorLead.setVoltage(IntakeShooterConstants.kAmpBaseVolt + PidOutput);
+    // Feeding Note into Shooter
+    if(Math.abs(shooterPidController.getPositionError()) < 20) IntakeFeed();
   }
 
-  public void setShooterSpeed(double value){
-    shooterMotorL.set(value);
+  public void ShootSpeaker(){
+    // Calculate PID Output
+    double PidOutput = shooterPidController.calculate(getEncoderSpeed(), IntakeShooterConstants.kSpeakerRPM);
+    // Enable Shooter
+    shooterMotorLead.setVoltage(IntakeShooterConstants.kSpeakerBaseVolt + PidOutput);
+    // Feeding Note into Shooter
+    if(Math.abs(shooterPidController.getPositionError()) < 20) IntakeFeed();
   }
 
-  public void stopShooter(){
-    shooterMotorL.set(0);
-    shooterMotorR.set(0);
+  public void IntakeFeed(){
+    intakeMotor.set(0.2);
   }
 
-  public void setIntakeSpeed(double value){
+  public void setShooterMotor(double value){
+    shooterMotorLead.set(value);
+  }
+  
+  public void setIntakeMotor(double value){
     intakeMotor.set(value);
   }
-
-  public void stopIntake(){
-    intakeMotor.set(0);
-  }
-
+  
+  // Reset EncoderS
   public void resetEncoder(){
     leftMotorEncoder.setPosition(0);
     rightMotorEncoder.setPosition(0);
   }
-
-  // Return Left Motor Speed
+  // Return Motor Speed
   public double getEncoderSpeed(){
     return leftMotorEncoder.getVelocity();
   }
-  // Return IR Sensor State
+  // Return Sensor State
   public boolean getNoteState(){
     return !IRsensor.get();
+  }
+
+  public void stopShooter(){
+    shooterMotorLead.set(0);
+    shooterMotorFollow.set(0);
+  }
+
+  public void stopIntake(){
+    intakeMotor.set(0);
   }
 
   @Override

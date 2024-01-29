@@ -70,6 +70,18 @@ public final class Constants {
     public static final double kArmKi = 0;
     public static final double kArmKd = 0;
   }
+  /* Intak-Shooter Constants */
+  public static final class IntakeShooterConstants{
+    // Shooter PID
+    public static final double kp = 0.0;
+    public static final double ki = 0.0;
+    public static final double kd = 0.0;
+    // Constants
+    public static final double kSpeakerBaseVolt = 5;
+    public static final double kSpeakerRPM = 4000;
+    public static final double kAmpBaseVolt = 4;
+    public static final double kAmpRPM = 300;
+  }
   /* April Tag Constants */
   public static final class ApriltagConstants{
     public static final int redSpeakerID1 = 3;
