@@ -35,6 +35,12 @@ public final class Constants {
     public static final int kShooterMotorLeftID = 3;
     public static final int kShooterMotorRightID = 4; 
     public static final int kIntakeMotorID = 5;
+    // Climber
+    public static final int kClimberMotorLeftID = 5;
+    public static final int kClimberMotorRightID = 6;
+    // Arm
+    public static final int kArmMotorLeftID = 1;
+    public static final int kArmMotorRightID = 2;
   }
   /* Digital Input */
   public static class DigitalInputPin{
@@ -52,6 +58,17 @@ public final class Constants {
     public static final double armGearRatio = 1/0.0;
     public static final double armOrigin = 0.908;
     public static final double armTaking = 0.0;
+    public static final double kArmMaxOutput = 0.3;
+    public static final double KArmEncoderOffset = 0;
+    // Feedforward
+    public static final double kArmFFkS = 0;
+    public static final double kArmFFkG = 0;
+    public static final double kArmFFkV = 0;
+    public static final double kArmFFkA = 0;
+    // PID Constants
+    public static final double kArmKp = 0;
+    public static final double kArmKi = 0;
+    public static final double kArmKd = 0;
   }
   /* April Tag Constants */
   public static final class ApriltagConstants{

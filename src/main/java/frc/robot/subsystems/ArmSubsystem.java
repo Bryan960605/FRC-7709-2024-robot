@@ -17,68 +17,89 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.MotorControllerIDs;
 
 import static frc.robot.Constants.ApriltagConstants.*;
 
 public class ArmSubsystem extends SubsystemBase {
-  /** Creates a new ArmSubsystem. */
-  private final CANSparkMax armMotor1 = new CANSparkMax(1, MotorType.kBrushless);
-  private final CANSparkMax armMotor2 = new CANSparkMax(2, MotorType.kBrushless);
-
-  
-  private final CANcoder armCANcoder = new CANcoder(0);
+  /* Motor controllers */
+  private final CANSparkMax armMotorLead = new CANSparkMax(MotorControllerIDs.kArmMotorLeftID, MotorType.kBrushless);
+  private final CANSparkMax armMotorFollow = new CANSparkMax(MotorControllerIDs.kArmMotorRightID, MotorType.kBrushless);
+  /* Encoder */
+  private final CANcoder encoder = new CANcoder(0);
   private final CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
-
-  private final ArmFeedforward armFeedforward = new ArmFeedforward(0, 0, 0, 0);
-  private final PIDController armPID = new PIDController(0, 0, 0);
-
-  private final double armMaxOutput = 0.3;
-  private final double absoluteEncoderOffset = 0;
-
-
-  private double armFeedforwardOutput;
-  private double armPIDOutput;
-  private double armMoveOutput;
-
-  private double armPosition;
-  private double distance;
-  private double armSetpoing = 0.0;
-  public double armAimSetpoint;
+  /* Feedforward */
+  private final ArmFeedforward armFeedforward = new ArmFeedforward(
+    ArmConstants.kArmFFkS,
+    ArmConstants.kArmFFkG,
+    ArmConstants.kArmFFkV);
+  /* PID Controller */
+  private final PIDController armPID = new PIDController(
+    ArmConstants.kArmKp, 
+    ArmConstants.kArmKi, 
+    ArmConstants.kArmKd);
+  /* Arm Setpoint */
+  private double setPoint = 0.0; // Units:Degree
 
   public ArmSubsystem() {
-    armMotor2.follow(armMotor1);
-    armMotor1.restoreFactoryDefaults();
-    armMotor2.restoreFactoryDefaults();
-
-    armMotor1.setIdleMode(IdleMode.kBrake);
-    armMotor2.setIdleMode(IdleMode.kBrake);
-    
-    armMotor1.setInverted(false);
-    armMotor2.setInverted(false);
-
-    armMotor1.burnFlash();
-    armMotor2.burnFlash();
-
-    cancoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    cancoderConfig.MagnetSensor.MagnetOffset = absoluteEncoderOffset;
+    /* Motor Controller Setting */
+    armMotorFollow.follow(armMotorLead);
+    armMotorLead.restoreFactoryDefaults();
+    armMotorFollow.restoreFactoryDefaults();
+    // Set idle mode
+    armMotorLead.setIdleMode(IdleMode.kBrake);
+    armMotorFollow.setIdleMode(IdleMode.kBrake);
+    // Set inverted
+    armMotorLead.setInverted(false);
+    armMotorFollow.setInverted(false);
+    // Burn flash
+    armMotorLead.burnFlash();
+    armMotorFollow.burnFlash();
+    /* CANcoder configuration */
+    cancoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+    cancoderConfig.MagnetSensor.MagnetOffset = ArmConstants.KArmEncoderOffset;
     cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    armCANcoder.getConfigurator().apply(cancoderConfig);
+    encoder.getConfigurator().apply(cancoderConfig);
+  }
+
+  public double getAngleDegree(){
+    return encoder.getAbsolutePosition().getValueAsDouble()*360;
   }
   
-  public double armPIDCalculate(double setpoint){
-    return Constants.setMaxOutput(armPID.calculate(armPosition, setpoint), armMaxOutput);
+  public double getAngleRadian(){
+    return encoder.getAbsolutePosition().getValueAsDouble()*Math.PI;
   }
 
-  public void setArmAngle(double value){
-    armSetpoing = value;
+  public double getVelocityRadPerSec(){
+    return encoder.getVelocity().getValueAsDouble()*2*Math.PI;
+  }
+  
+  public void AimSpeaker(){
+    // CalculateAngle
+
+    // Setpoint
+  }
+
+  public double PidCalculate(double setpoint){
+    return Constants.setMaxOutput(armPID.calculate(getAngleDegree(), setpoint), ArmConstants.kArmMaxOutput);
+  }
+
+  public void setAngleDegree(double value){
+    setPoint = value;
+  }
+
+  public void setMotorVolt(double value){
+    armMotorLead.setVoltage(value);
   }
 
   @Override
   public void periodic() {
-    armFeedforwardOutput = armFeedforward.calculate(armMoveOutput, armFeedforwardOutput);
-    armPosition = armCANcoder.getPosition().getValueAsDouble();
-    armAimSetpoint = -90 + Math.toDegrees(Math.atan((distance + limelightToArmDistance)/(speakerHeight - armHeight)));
-
-    armPIDOutput = armPIDCalculate(armAimSetpoint);
+    // Feedforward Calculation
+    double FeedForward = armFeedforward.calculate(getAngleRadian(), getVelocityRadPerSec());
+    // PID Calculation
+    double PIDController = PidCalculate(setPoint);
+    // Output to Motors
+    setMotorVolt(FeedForward + PIDController);
   }
 }
