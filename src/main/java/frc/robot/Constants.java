@@ -22,6 +22,7 @@ public final class Constants {
   public static final double robotWidth = Units.inchesToMeters(25.5);
   /* Operator IO */
   public static class OperatorConstants {
+    public static final double kJoystickDeadband = 0.8;
     public static final int kDriverControllerPort = 0;
     public static final int floorButton = 1;
     public static final int shootButton = 2;

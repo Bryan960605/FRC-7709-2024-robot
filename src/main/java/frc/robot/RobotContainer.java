@@ -12,9 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ArmCommand;
-import frc.robot.commands.BaseCommand;
-import frc.robot.commands.EndGameCommand;
 import frc.robot.commands.VisionCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -27,11 +24,6 @@ public class RobotContainer {
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ClimbSubsystem m_climbSubsystem = new ClimbSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-  //Command
-  public final ArmCommand m_armcommand = new ArmCommand(m_armSubsystem);
-  public final BaseCommand m_baseCommand = new BaseCommand(m_swerveSubsystem);
-  public final EndGameCommand m_endgameCommand = new EndGameCommand(m_climbSubsystem);
-  public final VisionCommand m_visionCommand = new VisionCommand(m_swerveSubsystem, m_armSubsystem, m_visionSubsystem);
   // Chooser
   private final SendableChooser<Command> autoChooser;
   //Joystick

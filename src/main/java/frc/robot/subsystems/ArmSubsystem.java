@@ -15,10 +15,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.ArmCommand;
 
 import static frc.robot.Constants.ApriltagConstants.*;
 
@@ -82,7 +80,5 @@ public class ArmSubsystem extends SubsystemBase {
     armAimSetpoint = -90 + Math.toDegrees(Math.atan((distance + limelightToArmDistance)/(speakerHeight - armHeight)));
 
     armPIDOutput = armPIDCalculate(armAimSetpoint);
-
-    SmartDashboard.putString("Mode", ArmCommand.mode);
   }
 }
