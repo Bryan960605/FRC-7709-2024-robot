@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -12,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -26,10 +30,10 @@ public class RobotContainer {
   // Chooser
   private final SendableChooser<Command> autoChooser;
   //Joystick
-  public static final XboxController baseJoystick = new XboxController(0);
-  public static final XboxController armJoystick = new XboxController(1);
+  public static final XboxController operatorJoysrick = new XboxController(OperatorConstants.kOperatorJoystickrPort);
+  public static final XboxController driverJoystick = new XboxController(OperatorConstants.kDriverJoystickrPort);
   //Button
-  public static final JoystickButton climbDoneButton = new JoystickButton(armJoystick, 1);
+  public static final JoystickButton climbDoneButton = new JoystickButton(operatorJoysrick, 1);
 
   public RobotContainer() {
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -38,9 +42,21 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    climbDoneButton.onTrue(Commands.run(()->{
-      m_climbSubsystem.climbDone();
-    }, m_climbSubsystem));
+    /* Drive Buttons */
+    DoubleSupplier driverLeftStickX = () -> driverJoystick.getRawAxis(0);
+    DoubleSupplier driverLeftStickY = () -> driverJoystick.getRawAxis(1);
+    DoubleSupplier driverRightStickX = () -> driverJoystick.getRawAxis(2);
+    JoystickButton driverRightBumper = new JoystickButton(driverJoystick, 3);
+    // Drive Command
+    Command driveCommand = new DriveCommand(
+      m_swerveSubsystem,
+      driverLeftStickX,
+      driverLeftStickY,
+      driverRightStickX,
+      driverRightBumper
+    );
+    // Set Default Command
+    m_swerveSubsystem.setDefaultCommand(driveCommand);
   }
 
   public Command getAutonomousCommand() {

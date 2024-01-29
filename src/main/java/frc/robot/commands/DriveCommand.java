@@ -40,7 +40,7 @@ public class DriveCommand extends Command {
     double xSpeed = xSpeedFunc.getAsDouble();
     double ySpeed = ySpeedFunc.getAsDouble();  
     double zSpeed = zSpeedFunc.getAsDouble();
-    boolean isFieldRelative = isFieldRelativeFunc.getAsBoolean();
+    boolean isFieldRelative = !isFieldRelativeFunc.getAsBoolean();
     // Deadband
     xSpeed = Math.abs(xSpeed) < OperatorConstants.kJoystickDeadband ? 0.0 : xSpeed;
     ySpeed = Math.abs(ySpeed) < OperatorConstants.kJoystickDeadband ? 0.0 : ySpeed;
