@@ -61,14 +61,19 @@ public final class Constants {
     public static final double kArmMaxOutput = 0.3;
     public static final double KArmEncoderOffset = 0;
     // Feedforward
-    public static final double kArmFFkS = 0;
-    public static final double kArmFFkG = 0;
-    public static final double kArmFFkV = 0;
-    public static final double kArmFFkA = 0;
+    public static final double kS = 0;
+    public static final double kG = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
     // PID Constants
-    public static final double kArmKp = 0;
-    public static final double kArmKi = 0;
-    public static final double kArmKd = 0;
+    public static final double kp = 0;
+    public static final double ki = 0;
+    public static final double kd = 0;
+    // Set Angle Degree
+    public static final double idleInsideAngle = 60;
+    public static final double IdleOutsideAngle = 20;
+    public static final double ampAngle = 92;
+    public static final double groundIntakeAngle = 0;
   }
   /* Intak-Shooter Constants */
   public static final class IntakeShooterConstants{
@@ -82,22 +87,6 @@ public final class Constants {
     public static final double kAmpBaseVolt = 4;
     public static final double kAmpRPM = 300;
   }
-  /* April Tag Constants */
-  public static final class ApriltagConstants{
-    public static final int redSpeakerID1 = 3;
-    public static final int redSpeakerID2 = 4;
-    public static final int redAMPID = 5;
-    public static final int blueSpeakerID1 = 7;
-    public static final int blueSpeakerID2 = 8;
-    public static final int blueAMPID = 6;
-    public static final double speakerZSetpoint = 0.0;
-    public static final double ampXSetpoint = 0.0;
-    public static final double ampYSetpoint = 0.0;
-    public static final double ampZSetpoint = 0.0;
-    public static final double speakerHeight = 204.5;//cm
-    public static final double armHeight = 0;
-    public static final double limelightToArmDistance = 0;
-  }
   /* Swerve Module Constants */
   public static final class SwerveModuleConstants{
     public static final double wheelDiameter = Units.inchesToMeters(4);
@@ -110,7 +99,9 @@ public final class Constants {
     public static final double turningMotorkP = 0.015;
     public static final double maxDriveMotorSpeed = 4.0;
   }
+  /* Swerve Drivebase Constants */
   public static final class SwerveConstants{
+    public static final int gyroID = 10;
     public static final int leftFrontDriveID = 7;
     public static final int leftFrontTurningID = 8;
     public static final int rightFrontDriveID = 1;
@@ -138,17 +129,7 @@ public final class Constants {
     public static final double rightFrontOffset = -0.355;
     public static final double leftRearOffset = -0.345;
     public static final double rightRearOffset = 0.042;
-    
-    public static double joysickValue(double value, double mineOutput){
-      if(Math.abs(value) < mineOutput){
-        return 0;
-      }
-      else{
-        return value;
-      }
-    }
 
-    public static final int gyroID = 10;
     //front left, front right, rear left, rear right
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
       new Translation2d(robotLength/2, robotWidth/2), 
@@ -162,5 +143,21 @@ public final class Constants {
     if(value > maxOutput) return maxOutput;
     else if(-value < -maxOutput) return -maxOutput;
     else return value;
+  }
+  /* April Tag Constants */
+  public static final class ApriltagConstants{
+    public static final int redSpeakerID1 = 3;
+    public static final int redSpeakerID2 = 4;
+    public static final int redAMPID = 5;
+    public static final int blueSpeakerID1 = 7;
+    public static final int blueSpeakerID2 = 8;
+    public static final int blueAMPID = 6;
+    public static final double speakerZSetpoint = 0.0;
+    public static final double ampXSetpoint = 0.0;
+    public static final double ampYSetpoint = 0.0;
+    public static final double ampZSetpoint = 0.0;
+    public static final double speakerHeight = 204.5;//cm
+    public static final double armHeight = 0;
+    public static final double limelightToArmDistance = 0;
   }
 }

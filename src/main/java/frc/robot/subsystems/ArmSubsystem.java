@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,14 +27,14 @@ public class ArmSubsystem extends SubsystemBase {
   private final CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
   /* Feedforward */
   private final ArmFeedforward armFeedforward = new ArmFeedforward(
-    ArmConstants.kArmFFkS,
-    ArmConstants.kArmFFkG,
-    ArmConstants.kArmFFkV);
+    ArmConstants.kS,
+    ArmConstants.kG,
+    ArmConstants.kV);
   /* PID Controller */
   private final PIDController armPID = new PIDController(
-    ArmConstants.kArmKp, 
-    ArmConstants.kArmKi, 
-    ArmConstants.kArmKd);
+    ArmConstants.kp, 
+    ArmConstants.ki, 
+    ArmConstants.kd);
   /* Arm Setpoint */
   private double setPoint = 0.0; // Units:Degree
 
@@ -72,10 +71,28 @@ public class ArmSubsystem extends SubsystemBase {
     return encoder.getVelocity().getValueAsDouble()*2*Math.PI;
   }
   
-  public void AimSpeaker(){
+  public void IdleInsidePosition(){
+    setPoint = ArmConstants.IdleOutsideAngle;
+  }
+
+  public void IdleOutsidePosition(){
+    setPoint = ArmConstants.IdleOutsideAngle;
+  }
+
+  public void AimSPEAKER(){
     // CalculateAngle
 
     // Setpoint
+  }
+
+  public void AimAMP(){
+    // CalculateAngle
+
+    // Setpoint
+  }
+
+  public void groundIntake(){
+    setPoint = ArmConstants.groundIntakeAngle;
   }
 
   public double PidCalculate(double setpoint){
