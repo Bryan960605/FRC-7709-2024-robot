@@ -48,6 +48,11 @@ public final class Constants {
     public static final int AXIS_RIGHT_X = 2;
     public static final int AXIS_RIGHT_Y = 3;
   }
+  /* Camera Type */
+  public static class CameraType{
+    public static final String HD3000 = "Microsoft_LifeCam_HD-3000";
+    public static final String Limelight = "";
+  }
   /* Motor Controller CAN ID */
   public static class MotorControllerIDs{
     // Intake-Shooter
@@ -149,6 +154,8 @@ public final class Constants {
     public static final double leftRearOffset = -0.345;
     public static final double rightRearOffset = 0.042;
 
+    public static final double maxWheelSpeed = 1;
+
     //front left, front right, rear left, rear right
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
       new Translation2d(robotLength/2, robotWidth/2), 
@@ -164,19 +171,50 @@ public final class Constants {
     else return value;
   }
   /* April Tag Constants */
-  public static final class ApriltagConstants{
-    public static final int redSpeakerID1 = 3;
-    public static final int redSpeakerID2 = 4;
-    public static final int redAMPID = 5;
-    public static final int blueSpeakerID1 = 7;
-    public static final int blueSpeakerID2 = 8;
-    public static final int blueAMPID = 6;
+  public static final class ApriltagIDs{
+    public static final int RedSpeakerCenter = 4;
+    public static final int RedSpeakerSide = 3;
+    public static final int RedAMPID = 5;
+    public static final int RedSourceR = 9;
+    public static final int RedSourceL = 10;
+    public static final int BlueSpeakerCenter = 7;
+    public static final int BlueSpeakerSide = 8;
+    public static final int BlueAMPID = 6;
+    public static final int BlueSourceR = 1;
+    public static final int BlueSourceL = 2;
     public static final double speakerZSetpoint = 0.0;
-    public static final double ampXSetpoint = 0.0;
-    public static final double ampYSetpoint = 0.0;
-    public static final double ampZSetpoint = 0.0;
     public static final double speakerHeight = 204.5;//cm
     public static final double armHeight = 0;
     public static final double limelightToArmDistance = 0;
-  }
+    public static int getApriltagID(boolean isBlue, String target){
+        if(isBlue){
+          switch(target){
+            case "SpeakerCenter":
+              return BlueSpeakerCenter;
+            case "SpeakerSide":
+              return BlueSpeakerSide;
+            case "Amp":
+              return BlueAMPID;
+            case "RightSource":
+              return BlueSourceR;
+            case "LeftSource":
+              return BlueSourceL;
+          }
+        }else{
+          switch(target){
+            case "SpeakerCenter":
+              return RedSpeakerCenter;
+            case "SpeakerSide":
+              return RedSpeakerSide;
+            case "Amp":
+              return RedAMPID;
+            case "RightSource":
+              return RedSourceR;
+            case "LeftSource":
+              return RedSourceL;
+          }
+        }
+        return 0;
+      }
+    }
 }

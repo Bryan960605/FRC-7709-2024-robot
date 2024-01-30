@@ -28,108 +28,125 @@ import java.util.Optional;
 
 
 public class SwerveSubsystem extends SubsystemBase{
+    /* Swerve Modules */
     private final SwerveModule leftFrontModule, rightFrontModule, leftRearModule, rightRearModule;
+    /* Gyro */
     private final Pigeon2 gyro = new Pigeon2(gyroID);
-    private SwerveDriveOdometry mOdometry;
     private final Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
+    /* Odometer */
+    private SwerveDriveOdometry mOdometry;
+    /* Field 2D */
     private final Field2d field = new Field2d();
+
     public SwerveSubsystem(){
-        gyroConfig.withMountPose(new MountPoseConfigs().withMountPoseYaw(180));
-        gyro.getConfigurator().apply(gyroConfig);
-        leftFrontModule = new SwerveModule(
-            leftFrontDriveID, 
-            leftFrontTurningID, 
-            leftFrontdriveMotorReversed, 
-            leftFrontTurningMotorReversed, 
-            leftFrontCANCoderID, 
-            leftFrontOffset);
-
-        rightFrontModule = new SwerveModule(
-            rightFrontDriveID,
-            rightFrontTurningID,
-            rightFrontDriveMotorReversed, 
-            rightfrontTurningMotorReversed, 
-            rightFrontCANCoderID, 
-            rightFrontOffset);
-
-        leftRearModule = new SwerveModule(
-            leftRearDriveID, 
-            leftRearTurningID, 
-            leftRearDriveMotorreversed, 
-            leftRearTurningMotorReversed, 
-            leftRearCANCoderID, 
-            leftRearOffset);
-
-        rightRearModule = new SwerveModule(
-            rightRearDriveID, 
-            rightRearTurningID, 
-            rightRearDriveMotorReversed, 
-            rightRearTurningMotorReversed, 
-            rightRearCANCoderID, 
-            rightRearOffset);
-        mOdometry = new SwerveDriveOdometry(
-            swerveKinematics, 
-            gyro.getRotation2d(), 
-            getModulePosition());
-        AutoBuilder.configureHolonomic(
-            this::getPose, 
-            this::setPose, 
-            this::getSpeeds, 
-            this::drive_auto,
-            new HolonomicPathFollowerConfig(
-                new PIDConstants(4.5, 0, 0), // Translation constants 
-                new PIDConstants(2, 0, 0.002), // Rotation constants 
-                SwerveModuleConstants.maxDriveMotorSpeed, 
-                Units.inchesToMeters(14.32), // Drive base radius (distance from center to furthest module) 
-                new ReplanningConfig()
-            ),
-            () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                Optional<Alliance> alliance = DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
-            },
-            this
-        );
-            // Set up custom logging to add the current path to a field 2d widget
-        PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
-        SmartDashboard.putData("Field", field);
+      /* Gyro Configuration */
+      gyroConfig.withMountPose(new MountPoseConfigs().withMountPoseYaw(180));
+      gyro.getConfigurator().apply(gyroConfig);
+      /* Create Modules */
+      leftFrontModule = new SwerveModule(
+        leftFrontDriveID, 
+        leftFrontTurningID, 
+        leftFrontdriveMotorReversed, 
+        leftFrontTurningMotorReversed, 
+        leftFrontCANCoderID, 
+        leftFrontOffset);
+      rightFrontModule = new SwerveModule(
+        rightFrontDriveID,
+        rightFrontTurningID,
+        rightFrontDriveMotorReversed, 
+        rightfrontTurningMotorReversed, 
+        rightFrontCANCoderID, 
+        rightFrontOffset);
+      leftRearModule = new SwerveModule(
+        leftRearDriveID, 
+        leftRearTurningID, 
+        leftRearDriveMotorreversed, 
+        leftRearTurningMotorReversed, 
+        leftRearCANCoderID, 
+        leftRearOffset);
+      rightRearModule = new SwerveModule(
+        rightRearDriveID, 
+        rightRearTurningID, 
+        rightRearDriveMotorReversed, 
+        rightRearTurningMotorReversed, 
+        rightRearCANCoderID, 
+        rightRearOffset);
+      /* Odometer Init */
+      mOdometry = new SwerveDriveOdometry(
+          swerveKinematics, 
+          gyro.getRotation2d(), 
+          getModulePosition());
+      /* Field2D init */
+      SmartDashboard.putData("Field", field);
+      /* Auto Bilder */
+      AutoBuilder.configureHolonomic(
+        this::getPose, 
+        this::setPose, 
+        this::getSpeeds, 
+        this::drive_auto,
+        new HolonomicPathFollowerConfig(
+          new PIDConstants(4.5, 0, 0), // Translation constants 
+          new PIDConstants(2, 0, 0.002), // Rotation constants 
+          SwerveModuleConstants.maxDriveMotorSpeed, 
+          Units.inchesToMeters(14.32), // Drive base radius (distance from center to furthest module) 
+          new ReplanningConfig()
+        ),
+        () -> {
+        // Boolean supplier that controls when the path will be mirrored for the red alliance
+        // This will flip the path being followed to the red side of the field.
+        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+          Optional<Alliance> alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this
+      );
+      // Set up custom logging to add the current path to a field 2d widget
+      PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
+       
     }
     public SwerveModulePosition[] getModulePosition(){
         return new SwerveModulePosition[]{
-            leftFrontModule.getPosition(),
-            rightFrontModule.getPosition(),
-            leftRearModule.getPosition(),
-            rightRearModule.getPosition()
+          leftFrontModule.getPosition(),
+          rightFrontModule.getPosition(),
+          leftRearModule.getPosition(),
+          rightRearModule.getPosition()
         };
     }
     public SwerveModuleState[] getModuleStates(){
         return new SwerveModuleState[]{
-            leftFrontModule.getState(),
-            rightFrontModule.getState(),
-            leftRearModule.getState(),
-            rightRearModule.getState()
+          leftFrontModule.getState(),
+          rightFrontModule.getState(),
+          leftRearModule.getState(),
+          rightRearModule.getState()
         };
     }
     public void setModuleStates(SwerveModuleState[] desiredStates){
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 1);
-        leftFrontModule.setDesiredState(desiredStates[0]);
-        rightFrontModule.setDesiredState(desiredStates[1]);
-        leftRearModule.setDesiredState(desiredStates[2]);
-        rightRearModule.setDesiredState(desiredStates[3]);
+      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveModuleConstants.maxDriveMotorSpeed);
+      leftFrontModule.setDesiredState(desiredStates[0]);
+      rightFrontModule.setDesiredState(desiredStates[1]);
+      leftRearModule.setDesiredState(desiredStates[2]);
+      rightRearModule.setDesiredState(desiredStates[3]);
     }
-    public void drive(double xSpeed, double ySpeed, double zSpeed, boolean fieldOriented){
+    public void stopModules(){
+      leftFrontModule.stopModule();
+      rightFrontModule.stopModule();
+      leftRearModule.stopModule();
+      rightRearModule.stopModule();
+    }
+    public void drive(double xSpeed, double ySpeed, double zSpeed, boolean isFieldOriented){
         SwerveModuleState[] states = null;
-        if(fieldOriented){
+        if(isFieldOriented){
             states = swerveKinematics.toSwerveModuleStates(
                 ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, gyro.getRotation2d()));
         }else{
             states = swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, zSpeed));
         }
+        SmartDashboard.putNumber("input_x", xSpeed);
+        SmartDashboard.putNumber("input_y", ySpeed);
+        SmartDashboard.putNumber("input_rotate", zSpeed);
         setModuleStates(states);
     }
     // Auto Drive
@@ -153,14 +170,14 @@ public class SwerveSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
         mOdometry.update(gyro.getRotation2d(), getModulePosition());
-        SmartDashboard.putNumber("leftFront", leftFrontModule.getDrivePosition());
-        SmartDashboard.putNumber("leftRear", leftRearModule.getDrivePosition());
-        SmartDashboard.putNumber("rightFront", rightFrontModule.getDrivePosition());
-        SmartDashboard.putNumber("rigthRear", rightRearModule.getDrivePosition());
-        SmartDashboard.putNumber("RRMP", rightRearModule.getTurnintEncoderPosition());
-        SmartDashboard.putNumber("RFMP", rightFrontModule.getTurnintEncoderPosition());
-        SmartDashboard.putNumber("LFMP", leftFrontModule.getTurnintEncoderPosition());
-        SmartDashboard.putNumber("LRMP", leftRearModule.getTurnintEncoderPosition());
+        SmartDashboard.putNumber("RR_DP", leftFrontModule.getDrivePosition());
+        SmartDashboard.putNumber("RF_DP", leftRearModule.getDrivePosition());
+        SmartDashboard.putNumber("LF_DP", rightFrontModule.getDrivePosition());
+        SmartDashboard.putNumber("LR_DP", rightRearModule.getDrivePosition());
+        SmartDashboard.putNumber("RR_MP", rightRearModule.getTurnintEncoderPosition());
+        SmartDashboard.putNumber("RF_MP", rightFrontModule.getTurnintEncoderPosition());
+        SmartDashboard.putNumber("LF_MP", leftFrontModule.getTurnintEncoderPosition());
+        SmartDashboard.putNumber("LR_MP", leftRearModule.getTurnintEncoderPosition());
     }
   
 }

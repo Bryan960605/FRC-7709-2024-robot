@@ -66,7 +66,10 @@ public class SwerveModule extends SubsystemBase{
         resetEncoders();
     }
 
-
+    public void stopModule(){
+        driveMotor.set(0);
+        turningMotor.set(0);
+    }
    
     public double getDrivePosition(){
         return driveEncoder.getPosition();

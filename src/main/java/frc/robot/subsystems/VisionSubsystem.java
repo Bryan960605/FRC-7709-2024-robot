@@ -10,94 +10,143 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
-import static frc.robot.Constants.ApriltagConstants.*;
+import frc.robot.Constants.ApriltagIDs;
+import frc.robot.Constants.CameraType;
 
 public class VisionSubsystem extends SubsystemBase {
-  /** Creates a new VisionSubsystem. */
-  public VisionSubsystem() {}
-  private final PhotonCamera photonLimelight = new PhotonCamera("Microsoft_LifeCam_HD-3000");
-
-  private final PIDController yMovePID = new PIDController(0.005, 0, 0);
-  private final PIDController xMovePID = new PIDController(0.0030, 0, 0);
-  private final PIDController turnPID = new PIDController(0.005, 0, 0);
-
+  // Camera
+  private final PhotonCamera photonCamera = new PhotonCamera(CameraType.HD3000);
+  
   private final Optional<Alliance> alliance = DriverStation.getAlliance();
+  
+  private PhotonPipelineResult Latestresult;
+  private PhotonTrackedTarget BestTarget;
+  private boolean hasTarget;
 
-  private double yMovePIDOutput, xMovePIDOutput, turnPIDOutput;
+  /* PID Controller */
+  private final PIDController yMovePID;
+  private final PIDController xMovePID;
+  private final PIDController zTurnPID;
 
   private final double maxXMovepPIDOutput = 0.3; 
   private final double maxYMovePIDOutput = 0.3;
   private final double maxTurnPIDOutput = 0.5;
 
-  public double botXValue;
-  private double botYValue;
-  private double botZValue;
-  private double xSetpoint;
-  private double ySetpoint;
-  private double zSetpoint;
   private int targetID;
+
+  public VisionSubsystem() {
+    yMovePID = new PIDController(0.005, 0, 0);
+    xMovePID = new PIDController(0.0030, 0, 0);
+    zTurnPID = new PIDController(0.005, 0, 0);
+  }
+
+  public boolean isBlueAlliance(){
+    return (alliance.get()==DriverStation.Alliance.Blue) ? true : false;
+  }
+ 
+  public boolean isTargetGet(){
+    return hasTarget;
+  }
+
+  public PhotonPipelineResult getLatestResult(){
+    return Latestresult;
+  }
+
+  public PhotonTrackedTarget getBestTarget(){
+    return BestTarget;
+  }
+
+  public int getBestTagID(){
+    return targetID;
+  }
+
+  public Transform3d getTarget3dPose(){
+    // Units:meter
+    return BestTarget.getBestCameraToTarget();
+  }
+
+  public double getTargetYaw(){
+    return BestTarget.getYaw();
+  }
+
+  public boolean isOurSpeaker(){
+    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter");
+  }
+
+  public double[] AimingSPEAKER(){
+    double xPidOutput, yPidOutput, yawPidOutput;
+    double[] Output = {0};
+    if(isTargetGet() && isOurSpeaker()){ 
+      // Get target measurement
+      double targetX = getTarget3dPose().getX();
+      double targetY = getTarget3dPose().getY();
+      double targetYaw = getTargetYaw();
+      // PID calculation
+      xPidOutput = xMovePID.calculate(targetX, 0);
+      yPidOutput = yMovePID.calculate(targetY, 0);
+      yawPidOutput = -zTurnPID.calculate(targetYaw, 0);
+      // Bounded      
+      Output[0] = Constants.setMaxOutput(xPidOutput, maxXMovepPIDOutput);
+      Output[1] = Constants.setMaxOutput(yPidOutput, maxYMovePIDOutput);
+      Output[2] = Constants.setMaxOutput(yawPidOutput, maxTurnPIDOutput);
+    }else{
+      // No target in sight
+      xPidOutput = 0;
+      yPidOutput = 0;
+      yawPidOutput = 0;
+    }
+    return Output;
+  }
+
   @Override
   public void periodic() {
-    
-    PhotonPipelineResult result = photonLimelight.getLatestResult();
-    PhotonTrackedTarget target = result.getBestTarget();
-    boolean hasTarget = result.hasTargets();
+    Latestresult = photonCamera.getLatestResult();
+    BestTarget = Latestresult.getBestTarget();
+    hasTarget = Latestresult.hasTargets();
+    targetID = BestTarget.getFiducialId();
 
-    if(hasTarget){
-      botXValue = target.getBestCameraToTarget().getX()*100;
-      botYValue = target.getBestCameraToTarget().getY();
-      if(alliance.get() == DriverStation.Alliance.Red){
-        if(targetID == redSpeakerID1 || targetID == redSpeakerID2){
-          botZValue = target.getYaw();
-          xSetpoint = 0;
-          ySetpoint = 0;
-          zSetpoint = speakerZSetpoint;
-        }
-        else if(targetID == redAMPID){
-          botZValue = target.getBestCameraToTarget().getRotation().getAngle();
-          xSetpoint = ampXSetpoint;
-          ySetpoint = ampYSetpoint;
-          zSetpoint = ampZSetpoint;
-        }
-      }
-      else{
-        if(targetID == blueSpeakerID1 || targetID == blueSpeakerID2){
-          botZValue = target.getYaw();
-        }
-        else if(targetID == blueAMPID){
-          botZValue = target.getBestCameraToTarget().getRotation().getAngle();
-        }
-      }
-    }
-    else{
-      botXValue = 0;
-      botYValue = 0;
-      botZValue = 0;
-      xSetpoint = 0;
-      ySetpoint = 0;
-    }
+    // if(hasTarget){
+    //   botXValue = BestTarget.getBestCameraToTarget().getX()*100;
+    //   botYValue = BestTarget.getBestCameraToTarget().getY();
+    //   // Red Alliance
+    //   if(alliance.get() == DriverStation.Alliance.Red){
+    //     if(targetID == redSpeakerID1 || targetID == redSpeakerID2){
+    //       botZValue = BestTarget.getYaw();
+    //       xSetpoint = 0;
+    //       ySetpoint = 0;
+    //       zSetpoint = speakerZSetpoint;
+    //     }
+    //     else if(targetID == redAMPID){
+    //       botZValue = BestTarget.getBestCameraToTarget().getRotation().getAngle();
+    //     }
+    //   }
+    //   else{
+    //     if(targetID == blueSpeakerID1 || targetID == blueSpeakerID2){
+    //       botZValue = BestTarget.getYaw();
+    //     }
+    //     else if(targetID == blueAMPID){
+    //       botZValue = BestTarget.getBestCameraToTarget().getRotation().getAngle();
+    //     }
+    //   }
+    // }
+    // else{
+    //   botXValue = 0;
+    //   botYValue = 0;
+    //   botZValue = 0;
+    //   xSetpoint = 0;
+    //   ySetpoint = 0;
+    // }
     
-    yMovePIDOutput = yMovePID.calculate(botYValue, xSetpoint);
-    xMovePIDOutput = xMovePID.calculate(botXValue, ySetpoint);
-    turnPIDOutput = -turnPID.calculate(botZValue, zSetpoint);
-
-    xMovePIDOutput = Constants.setMaxOutput(xMovePIDOutput, maxXMovepPIDOutput);
-    yMovePIDOutput = Constants.setMaxOutput(yMovePIDOutput, maxYMovePIDOutput);
-    turnPIDOutput = Constants.setMaxOutput(turnPIDOutput, maxTurnPIDOutput);
    
-    SmartDashboard.putNumber("Yaw", botZValue);
-    SmartDashboard.putNumber("photonY", botYValue);
-    SmartDashboard.putNumber("photonX", botXValue);
-    SmartDashboard.putNumber("targetID", targetID);
-
-    SmartDashboard.putNumber("xMovePIDOutput", xMovePIDOutput);
-    SmartDashboard.putNumber("yMovePIDOutput", yMovePIDOutput);
-    SmartDashboard.putNumber("turn", turnPIDOutput);
+    // SmartDashboard.putNumber("Yaw", botZValue);
+    // SmartDashboard.putNumber("photonY", botYValue);
+    // SmartDashboard.putNumber("photonX", botXValue);
+    // SmartDashboard.putNumber("targetID", targetID);
   }
 }
