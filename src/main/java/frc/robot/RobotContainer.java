@@ -18,10 +18,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.TurnLeftTest;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
   //Subsystem
   private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
+  private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
   // Chooser
   private final SendableChooser<Command> autoChooser;
   //Joystick
@@ -44,6 +46,7 @@ public class RobotContainer {
     // Buttons
     JoystickButton fieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
     JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
+    JoystickButton Aiming = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
     // Drive Command
     Command driveCommand = new DriveCommand(
       m_swerveSubsystem,
@@ -56,6 +59,8 @@ public class RobotContainer {
     m_swerveSubsystem.setDefaultCommand(driveCommand);
     /* Trun Robot Test */
     turnBtn.whileTrue(new TurnLeftTest(m_swerveSubsystem));
+    /* Aiming Speaker */
+
   }
 
   public Command getAutonomousCommand() {

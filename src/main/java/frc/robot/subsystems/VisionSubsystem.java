@@ -34,10 +34,6 @@ public class VisionSubsystem extends SubsystemBase {
   private final PIDController xMovePID;
   private final PIDController zTurnPID;
 
-  private final double maxXMovepPIDOutput = 0.3; 
-  private final double maxYMovePIDOutput = 0.3;
-  private final double maxTurnPIDOutput = 0.5;
-
   private int targetID;
 
   public VisionSubsystem() {
@@ -80,7 +76,6 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public double[] AimingSPEAKER(){
-    double xPidOutput, yPidOutput, yawPidOutput;
     double[] Output = {0};
     if(isTargetGet() && isOurSpeaker()){ 
       // Get target measurement
@@ -88,18 +83,18 @@ public class VisionSubsystem extends SubsystemBase {
       double targetY = getTarget3dPose().getY();
       double targetYaw = getTargetYaw();
       // PID calculation
-      xPidOutput = xMovePID.calculate(targetX, 0);
-      yPidOutput = yMovePID.calculate(targetY, 0);
-      yawPidOutput = -zTurnPID.calculate(targetYaw, 0);
-      // Bounded      
-      Output[0] = Constants.setMaxOutput(xPidOutput, maxXMovepPIDOutput);
-      Output[1] = Constants.setMaxOutput(yPidOutput, maxYMovePIDOutput);
-      Output[2] = Constants.setMaxOutput(yawPidOutput, maxTurnPIDOutput);
+      Output[0] = xMovePID.calculate(targetX, 0);
+      Output[1] = yMovePID.calculate(targetY, 0);
+      Output[2] = -zTurnPID.calculate(targetYaw, 0);
+      // // Bounded      
+      // Output[0] = Constants.setMaxOutput(xPidOutput, maxXMovepPIDOutput);
+      // Output[1] = Constants.setMaxOutput(yPidOutput, maxYMovePIDOutput);
+      // Output[2] = Constants.setMaxOutput(yawPidOutput, maxTurnPIDOutput);
     }else{
       // No target in sight
-      xPidOutput = 0;
-      yPidOutput = 0;
-      yawPidOutput = 0;
+      Output[0] = 0;
+      Output[1] = 0;
+      Output[2] = 0;
     }
     return Output;
   }
@@ -110,43 +105,10 @@ public class VisionSubsystem extends SubsystemBase {
     BestTarget = Latestresult.getBestTarget();
     hasTarget = Latestresult.hasTargets();
     targetID = BestTarget.getFiducialId();
-
-    // if(hasTarget){
-    //   botXValue = BestTarget.getBestCameraToTarget().getX()*100;
-    //   botYValue = BestTarget.getBestCameraToTarget().getY();
-    //   // Red Alliance
-    //   if(alliance.get() == DriverStation.Alliance.Red){
-    //     if(targetID == redSpeakerID1 || targetID == redSpeakerID2){
-    //       botZValue = BestTarget.getYaw();
-    //       xSetpoint = 0;
-    //       ySetpoint = 0;
-    //       zSetpoint = speakerZSetpoint;
-    //     }
-    //     else if(targetID == redAMPID){
-    //       botZValue = BestTarget.getBestCameraToTarget().getRotation().getAngle();
-    //     }
-    //   }
-    //   else{
-    //     if(targetID == blueSpeakerID1 || targetID == blueSpeakerID2){
-    //       botZValue = BestTarget.getYaw();
-    //     }
-    //     else if(targetID == blueAMPID){
-    //       botZValue = BestTarget.getBestCameraToTarget().getRotation().getAngle();
-    //     }
-    //   }
-    // }
-    // else{
-    //   botXValue = 0;
-    //   botYValue = 0;
-    //   botZValue = 0;
-    //   xSetpoint = 0;
-    //   ySetpoint = 0;
-    // }
     
-   
-    // SmartDashboard.putNumber("Yaw", botZValue);
-    // SmartDashboard.putNumber("photonY", botYValue);
-    // SmartDashboard.putNumber("photonX", botXValue);
-    // SmartDashboard.putNumber("targetID", targetID);
+    SmartDashboard.putBoolean("HasTarget", isTargetGet());
+    SmartDashboard.putNumber("TargetID", getBestTagID());
+    SmartDashboard.putNumber("TargetX", getTarget3dPose().getX());
+    SmartDashboard.putNumber("TargetY", getTarget3dPose().getY());
   }
 }
