@@ -30,6 +30,24 @@ public final class Constants {
     public static final int primetiveButton = 3;
     public static final int takeButton = 4;
   }
+  // Logitech Joystick D-Mode
+  public static class LogitechJoystickLayout{
+    public static final int BTN_X = 1;
+    public static final int BTN_A = 2;
+    public static final int BTN_B = 3;
+    public static final int BTN_Y = 4;
+    public static final int BTN_LEFT_BUMPER = 5;
+    public static final int BTN_RIGHT_BUMPER = 6;
+    public static final int BTN_LEFT_TRIGGER = 7;
+    public static final int BTN_RIGHT_TRIGGER = 8;
+    public static final int BTN_BACK = 9;
+    public static final int BTN_START = 10;
+    public static final int BTN_LEFT_JOYSTICK = 11;
+    public static final int AXIS_LEFT_X = 0;
+    public static final int AXIS_LEFT_Y = 1;
+    public static final int AXIS_RIGHT_X = 2;
+    public static final int AXIS_RIGHT_Y = 3;
+  }
   /* Motor Controller CAN ID */
   public static class MotorControllerIDs{
     // Intake-Shooter
