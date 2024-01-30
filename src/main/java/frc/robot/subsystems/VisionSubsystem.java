@@ -72,6 +72,12 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public boolean isOurSpeaker(){
+    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "Amp");
+  }
+  public boolean isOurAmp(){
+    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter");
+  }
+  public boolean isOurSource(){
     return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter");
   }
 

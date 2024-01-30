@@ -186,35 +186,22 @@ public final class Constants {
     public static final double speakerHeight = 204.5;//cm
     public static final double armHeight = 0;
     public static final double limelightToArmDistance = 0;
+    // ID Selector
     public static int getApriltagID(boolean isBlue, String target){
-        if(isBlue){
-          switch(target){
-            case "SpeakerCenter":
-              return BlueSpeakerCenter;
-            case "SpeakerSide":
-              return BlueSpeakerSide;
-            case "Amp":
-              return BlueAMPID;
-            case "RightSource":
-              return BlueSourceR;
-            case "LeftSource":
-              return BlueSourceL;
-          }
-        }else{
-          switch(target){
-            case "SpeakerCenter":
-              return RedSpeakerCenter;
-            case "SpeakerSide":
-              return RedSpeakerSide;
-            case "Amp":
-              return RedAMPID;
-            case "RightSource":
-              return RedSourceR;
-            case "LeftSource":
-              return RedSourceL;
-          }
-        }
-        return 0;
+      switch(target){
+        case "SpeakerCenter":
+          return isBlue ? BlueSpeakerCenter : RedSpeakerCenter;
+        case "SpeakerSide":
+          return isBlue ? BlueSpeakerSide : RedSpeakerSide;
+        case "Amp":
+          return isBlue ? BlueAMPID : RedAMPID;
+        case "RightSource":
+          return isBlue ? BlueSourceR : RedSourceR;
+        case "LeftSource":
+          return isBlue ? BlueSourceL : RedSourceL;
+        default:
+          return 0;
       }
     }
+  }
 }
