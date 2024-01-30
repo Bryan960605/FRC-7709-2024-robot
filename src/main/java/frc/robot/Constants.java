@@ -24,7 +24,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverJoystickrPort = 0;
     public static final int kOperatorJoystickrPort = 1;
-    public static final double kJoystickDeadband = 0.8;
+    public static final double kJoystickDeadband = 0.05;
     public static final int floorButton = 1;
     public static final int shootButton = 2;
     public static final int primetiveButton = 3;
@@ -120,41 +120,43 @@ public final class Constants {
     public static final double turningEncoderRot2Rad = turningMotorGearRatio*2*Math.PI;
     public static final double driveEncoderRPM2MeterPerSec = driveEncoderRot2Meter/60.0;
     public static final double turningEncoderRPM2RadPerSec = turningEncoderRot2Rad/60.0;
-    public static final double turningMotorkP = 0.015;
-    public static final double maxDriveMotorSpeed = 4.0;
+    public static final double turningMotorkP = 0.01;
+
+    public static final double maxDriveMotorSpeed = 0.5;
   }
   /* Swerve Drivebase Constants */
   public static final class SwerveConstants{
-    public static final int gyroID = 10;
-    public static final int leftFrontDriveID = 7;
-    public static final int leftFrontTurningID = 8;
-    public static final int rightFrontDriveID = 1;
-    public static final int rightFrontTurningID = 2;  
-    public static final int leftRearDriveID = 5;
-    public static final int leftRearTurningID = 6;
-    public static final int rightRearDriveID = 3;
-    public static final int rightRearTurningID = 4;
+    public static final int gyroID = 33;
+    public static final int leftFrontDriveID = 24;
+    public static final int leftFrontTurningID = 23;
+    public static final int rightFrontDriveID = 15;
+    public static final int rightFrontTurningID = 22;  
+    public static final int leftRearDriveID = 11;
+    public static final int leftRearTurningID = 16;
+    public static final int rightRearDriveID = 17;
+    public static final int rightRearTurningID = 21;
 
-    public static final int leftFrontCANCoderID = 14;
-    public static final int rightFrontCANCoderID = 11;
-    public static final int leftRearCANCoderID = 13;
-    public static final int rightRearCANCoderID = 12;
+    public static final int leftFrontCANCoderID = 1;
+    public static final int rightFrontCANCoderID = 2;
+    public static final int leftRearCANCoderID = 3;
+    public static final int rightRearCANCoderID = 4;
 
     public static final boolean leftFrontdriveMotorReversed = true;
-    public static final boolean leftFrontTurningMotorReversed = true;
-    public static final boolean rightFrontDriveMotorReversed = true;
-    public static final boolean rightfrontTurningMotorReversed = true;
+    public static final boolean rightFrontDriveMotorReversed = false;
     public static final boolean leftRearDriveMotorreversed = false;
-    public static final boolean leftRearTurningMotorReversed = true;
     public static final boolean rightRearDriveMotorReversed = false;
+
+    public static final boolean leftFrontTurningMotorReversed = true;
+    public static final boolean rightfrontTurningMotorReversed = true;
+    public static final boolean leftRearTurningMotorReversed = true;
     public static final boolean rightRearTurningMotorReversed = true;
+    
+    public static final double leftFrontOffset = -0.461;
+    public static final double rightFrontOffset = -0.34;
+    public static final double leftRearOffset = 0.151;
+    public static final double rightRearOffset = -0.379;
 
-    public static final double leftFrontOffset = 0.129;
-    public static final double rightFrontOffset = -0.355;
-    public static final double leftRearOffset = -0.345;
-    public static final double rightRearOffset = 0.042;
-
-    public static final double maxWheelSpeed = 1;
+    // public static final double maxWheelSpeed = 0.5;
 
     //front left, front right, rear left, rear right
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
@@ -165,7 +167,6 @@ public final class Constants {
     );
   }
   public static double setMaxOutput(double value, double maxOutput){
-    // return min(maxOutput, max(value, -maxOutput)) 這樣一行或許就可以搞定了
     if(value > maxOutput) return maxOutput;
     else if(-value < -maxOutput) return -maxOutput;
     else return value;

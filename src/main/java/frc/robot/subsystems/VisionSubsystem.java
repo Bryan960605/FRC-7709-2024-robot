@@ -26,9 +26,9 @@ public class VisionSubsystem extends SubsystemBase {
   
   private final Optional<Alliance> alliance = DriverStation.getAlliance();
   
-  private PhotonPipelineResult Latestresult;
-  private PhotonTrackedTarget BestTarget;
-  private boolean hasTarget;
+  private PhotonPipelineResult Latestresult = null;
+  private PhotonTrackedTarget BestTarget = null;
+  private boolean hasTarget = false;
 
   /* PID Controller */
   private final PIDController yMovePID;
@@ -38,13 +38,13 @@ public class VisionSubsystem extends SubsystemBase {
   private int targetID;
 
   public VisionSubsystem() {
-    yMovePID = new PIDController(0.005, 0, 0);
-    xMovePID = new PIDController(0.0030, 0, 0);
+    yMovePID = new PIDController(0.05, 0, 0);
+    xMovePID = new PIDController(0.030, 0, 0);
     zTurnPID = new PIDController(0.005, 0, 0);
   }
 
   public boolean isBlueAlliance(){
-    return (alliance.get()==DriverStation.Alliance.Blue) ? true : false;
+    return alliance.get()==Alliance.Blue;
   }
  
   public boolean isTargetGet(){
@@ -72,19 +72,20 @@ public class VisionSubsystem extends SubsystemBase {
     return BestTarget.getYaw();
   }
 
-  public boolean isOurSpeaker(){
+  public boolean isOurAmp(){
     return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "Amp");
   }
-  public boolean isOurAmp(){
-    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter");
+  public boolean isOurSpeaker(){
+    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter")?true:false;
   }
   public boolean isOurSource(){
-    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SourceInside");
+    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SourceInside")?true:false;
   }
 
   public double[] AimingSPEAKER(){
-    double[] Output = {0};
+    double[] Output = {0,0,0};
     if(isTargetGet() && isOurSpeaker()){ 
+      System.out.println("Aiming SPEAKER");
       // Get target measurement
       double targetX = getTarget3dPose().getX();
       double targetY = getTarget3dPose().getY();
@@ -102,12 +103,14 @@ public class VisionSubsystem extends SubsystemBase {
       Output[0] = 0;
       Output[1] = 0;
       Output[2] = 0;
+      System.out.println("I can't see SPEAKER!");
     }
     return Output;
   }
   public double[] AimingAMP(){
-    double[] Output = {0};
-    if(isTargetGet() && isOurSpeaker()){ 
+    double[] Output = {0, 0, 0};
+    if(isTargetGet()==true && isOurAmp()==true){ 
+      System.out.println("Aiming AMP");
       // Get target measurement
       double targetX = getTarget3dPose().getX();
       double targetY = getTarget3dPose().getY();
@@ -125,12 +128,14 @@ public class VisionSubsystem extends SubsystemBase {
       Output[0] = 0;
       Output[1] = 0;
       Output[2] = 0;
+      System.out.println("I can't see AMP!");
     }
     return Output;
   }
   public double[] AimingSOURCE(){
-    double[] Output = {0};
-    if(isTargetGet() && isOurAmp()){ 
+    double[] Output = {0,0,0};
+    if(isTargetGet() && isOurSource()){ 
+      System.out.println("Aiming SOURCE");
       // Get target measurement
       double targetX = getTarget3dPose().getX();
       double targetY = getTarget3dPose().getY();
@@ -148,6 +153,7 @@ public class VisionSubsystem extends SubsystemBase {
       Output[0] = 0;
       Output[1] = 0;
       Output[2] = 0;
+      System.out.println("I can't see SOURCE!");
     }
     return Output;
   }
@@ -156,11 +162,16 @@ public class VisionSubsystem extends SubsystemBase {
     Latestresult = photonCamera.getLatestResult();
     BestTarget = Latestresult.getBestTarget();
     hasTarget = Latestresult.hasTargets();
-    targetID = BestTarget.getFiducialId();
-    
-    SmartDashboard.putBoolean("HasTarget", isTargetGet());
-    SmartDashboard.putNumber("TargetID", getBestTagID());
-    SmartDashboard.putNumber("TargetX", getTarget3dPose().getX());
-    SmartDashboard.putNumber("TargetY", getTarget3dPose().getY());
+    SmartDashboard.putBoolean("isBlue", isOurAmp());
+    SmartDashboard.putNumber("Amp", ApriltagIDs.getApriltagID(isBlueAlliance(), "Amp"));
+    if(isTargetGet()){
+      targetID = BestTarget.getFiducialId();
+      SmartDashboard.putBoolean("HasTarget", isTargetGet());
+      SmartDashboard.putNumber("TargetID", getBestTagID());
+      SmartDashboard.putNumber("TargetX", getTarget3dPose().getX());
+      SmartDashboard.putNumber("TargetY", getTarget3dPose().getY());
+    }else{
+      SmartDashboard.putBoolean("HasTarget", false);
+    }
   }
 }

@@ -40,7 +40,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public SwerveSubsystem(){
       /* Gyro Configuration */
-      gyroConfig.withMountPose(new MountPoseConfigs().withMountPoseYaw(180));
+      gyroConfig.withMountPose(new MountPoseConfigs().withMountPoseYaw(90));
       gyro.getConfigurator().apply(gyroConfig);
       /* Create Modules */
       leftFrontModule = new SwerveModule(
@@ -174,10 +174,11 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("RF_DP", leftRearModule.getDrivePosition());
         SmartDashboard.putNumber("LF_DP", rightFrontModule.getDrivePosition());
         SmartDashboard.putNumber("LR_DP", rightRearModule.getDrivePosition());
-        SmartDashboard.putNumber("RR_MP", rightRearModule.getTurnintEncoderPosition());
-        SmartDashboard.putNumber("RF_MP", rightFrontModule.getTurnintEncoderPosition());
-        SmartDashboard.putNumber("LF_MP", leftFrontModule.getTurnintEncoderPosition());
-        SmartDashboard.putNumber("LR_MP", leftRearModule.getTurnintEncoderPosition());
+        SmartDashboard.putNumber("RR_Angle", rightRearModule.getTurningPosition());
+        SmartDashboard.putNumber("RF_Angle", rightFrontModule.getTurningPosition());
+        SmartDashboard.putNumber("LF_Angle", leftFrontModule.getTurningPosition());
+        SmartDashboard.putNumber("LR_Angle", leftRearModule.getTurningPosition());
+        SmartDashboard.putNumber("GyroReading", gyro.getAngle());
     }
   
 }

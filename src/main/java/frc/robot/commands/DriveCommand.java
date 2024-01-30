@@ -20,14 +20,14 @@ public class DriveCommand extends Command {
   private final SlewRateLimiter zLimiter = new SlewRateLimiter(4);
   // Variable
   private final DoubleSupplier xSpeedFunc, ySpeedFunc, zSpeedFunc;
-  private final BooleanSupplier isFieldRelativeFunc;
+  private final Boolean isFieldRelative;
 
-  public DriveCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier xSpeedFunc, DoubleSupplier ySpeedFunc, DoubleSupplier zSpeedFunc, BooleanSupplier isFieldRelativeFunc) {
+  public DriveCommand(SwerveSubsystem swerveSubsystem, DoubleSupplier xSpeedFunc, DoubleSupplier ySpeedFunc, DoubleSupplier zSpeedFunc, Boolean isFieldRelative) {
     this.m_swerveSubsystem = swerveSubsystem;
     this.xSpeedFunc = xSpeedFunc;
     this.ySpeedFunc = ySpeedFunc;
     this.zSpeedFunc = zSpeedFunc;
-    this.isFieldRelativeFunc = isFieldRelativeFunc;
+    this.isFieldRelative = isFieldRelative;
     addRequirements(m_swerveSubsystem); 
   }
 
@@ -40,7 +40,7 @@ public class DriveCommand extends Command {
     double xSpeed = xSpeedFunc.getAsDouble();
     double ySpeed = ySpeedFunc.getAsDouble();  
     double zSpeed = zSpeedFunc.getAsDouble();
-    boolean isFieldRelative = !isFieldRelativeFunc.getAsBoolean();
+    
     // Deadband
     xSpeed = Math.abs(xSpeed) < OperatorConstants.kJoystickDeadband ? 0.0 : xSpeed;
     ySpeed = Math.abs(ySpeed) < OperatorConstants.kJoystickDeadband ? 0.0 : ySpeed;

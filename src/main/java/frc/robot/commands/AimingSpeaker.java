@@ -12,7 +12,6 @@ public class AimingSpeaker extends Command {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final VisionSubsystem m_VisionSubsystem;
 
-
   public AimingSpeaker(SwerveSubsystem swerveSubsystem, VisionSubsystem visionSubsystem) {
     this.m_SwerveSubsystem = swerveSubsystem;
     this.m_VisionSubsystem = visionSubsystem;
@@ -31,7 +30,7 @@ public class AimingSpeaker extends Command {
     move = m_VisionSubsystem.AimingSPEAKER();
     // Move drivebase
     m_SwerveSubsystem.stopModules();
-    // m_SwerveSubsystem.drive(move[0], move[1], move[2], false);
+    m_SwerveSubsystem.drive(move[0], move[1], move[2], false);
   }
 
   @Override

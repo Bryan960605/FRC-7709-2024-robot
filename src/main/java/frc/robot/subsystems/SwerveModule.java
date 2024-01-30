@@ -43,10 +43,10 @@ public class SwerveModule extends SubsystemBase{
         turningMotor.restoreFactoryDefaults();
         driveMotor.setInverted(driveMotorReversed);
         turningMotor.setInverted(turningMotorReversed);
-        driveMotor.setIdleMode(IdleMode.kBrake);
+        driveMotor.setIdleMode(IdleMode.kCoast);
         turningMotor.setIdleMode(IdleMode.kCoast);
-        driveMotor.burnFlash();
-        turningMotor.burnFlash();
+        // driveMotor.burnFlash();
+        // turningMotor.burnFlash();
 
         cancoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         cancoderConfig.MagnetSensor.MagnetOffset = absoluteEncoderOffsetDegree;
@@ -54,11 +54,6 @@ public class SwerveModule extends SubsystemBase{
 
         driveEncoder = driveMotor.getEncoder();
         turningEncoder = turningMotor.getEncoder();
-        
-        driveEncoder.setPositionConversionFactor(SwerveModuleConstants.driveEncoderRot2Meter);
-        driveEncoder.setVelocityConversionFactor(SwerveModuleConstants.driveEncoderRPM2MeterPerSec);
-        turningEncoder.setPositionConversionFactor(SwerveModuleConstants.turningEncoderRot2Rad);
-        turningEncoder.setVelocityConversionFactor(SwerveModuleConstants.turningEncoderRPM2RadPerSec);
 
         turningPIDController = new PIDController(SwerveModuleConstants.turningMotorkP, 0, 0);
         turningPIDController.enableContinuousInput(-180, 180);
@@ -72,19 +67,19 @@ public class SwerveModule extends SubsystemBase{
     }
    
     public double getDrivePosition(){
-        return driveEncoder.getPosition();
+        return driveEncoder.getPosition()*SwerveModuleConstants.driveEncoderRot2Meter;
     }
     public double getTurningPosition(){
         return absoluteEncoder.getAbsolutePosition().getValue()*360;
     }
     public double getTurnintEncoderPosition(){
-        return turningEncoder.getPosition();
+        return turningEncoder.getPosition()*SwerveModuleConstants.turningEncoderRot2Rad;
     }
     public double getDriveVelocity(){
-        return driveEncoder.getVelocity();
+        return driveEncoder.getVelocity()*SwerveModuleConstants.driveEncoderRPM2MeterPerSec;
     }
     public double getTurningVelocity(){
-        return turningEncoder.getVelocity();
+        return turningEncoder.getVelocity()*SwerveModuleConstants.turningEncoderRPM2RadPerSec;
     }
     public void resetEncoders(){
         driveEncoder.setPosition(0);
@@ -110,7 +105,5 @@ public class SwerveModule extends SubsystemBase{
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("angle", angle);
-        SmartDashboard.putNumber("setpoint", setpointangle);
     }
 }

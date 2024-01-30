@@ -6,15 +6,18 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import com.fasterxml.jackson.databind.cfg.CoercionConfigs;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimingAMP;
 import frc.robot.commands.AimingSpeaker;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.TurnLeftTest;
@@ -30,8 +33,6 @@ public class RobotContainer {
   //Joystick
   public static final XboxController operatorJoysrick = new XboxController(OperatorConstants.kOperatorJoystickrPort);
   public static final XboxController driverJoystick = new XboxController(OperatorConstants.kDriverJoystickrPort);
-  //Button
-  public static final JoystickButton climbDoneButton = new JoystickButton(operatorJoysrick, 1);
 
   public RobotContainer() {
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -41,27 +42,34 @@ public class RobotContainer {
 
   private void configureBindings() {
     /* Drive Buttons */
-    DoubleSupplier driverLeftStickX = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_LEFT_X);
-    DoubleSupplier driverLeftStickY = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_LEFT_Y);
+    DoubleSupplier driverLeftStickX = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_LEFT_Y);
+    DoubleSupplier driverLeftStickY = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_LEFT_X);
     DoubleSupplier driverRightStickX = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_RIGHT_X);
     // Buttons
-    JoystickButton fieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
+    JoystickButton notfieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
     JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
     JoystickButton AimingBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_RIGHT_BUMPER);
+    JoystickButton ZeroingGyro = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_X);
     // Drive Command
     Command driveCommand = new DriveCommand(
       m_swerveSubsystem,
       driverLeftStickX,
       driverLeftStickY,
       driverRightStickX,
-      fieldOrientedBtn
+      !notfieldOrientedBtn.getAsBoolean()
     );
     // Set Default Command
     m_swerveSubsystem.setDefaultCommand(driveCommand);
     /* Trun Robot Test */
     turnBtn.whileTrue(new TurnLeftTest(m_swerveSubsystem));
     /* Aiming Speaker */
-    AimingBtn.whileTrue(new AimingSpeaker(m_swerveSubsystem, m_VisionSubsystem));
+    AimingBtn.whileTrue(new AimingAMP(m_swerveSubsystem, m_VisionSubsystem));
+    ZeroingGyro.onTrue(
+      new RunCommand(
+        ()->{
+          m_swerveSubsystem.resetGyro();
+        })
+    );
   }
 
   public Command getAutonomousCommand() {
