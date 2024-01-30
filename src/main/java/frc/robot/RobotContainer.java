@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimingSpeaker;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.TurnLeftTest;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -46,7 +47,7 @@ public class RobotContainer {
     // Buttons
     JoystickButton fieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
     JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
-    JoystickButton Aiming = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
+    JoystickButton AimingBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_RIGHT_BUMPER);
     // Drive Command
     Command driveCommand = new DriveCommand(
       m_swerveSubsystem,
@@ -60,7 +61,7 @@ public class RobotContainer {
     /* Trun Robot Test */
     turnBtn.whileTrue(new TurnLeftTest(m_swerveSubsystem));
     /* Aiming Speaker */
-
+    AimingBtn.whileTrue(new AimingSpeaker(m_swerveSubsystem, m_VisionSubsystem));
   }
 
   public Command getAutonomousCommand() {

@@ -27,7 +27,6 @@ public class AimingSpeaker extends Command {
   @Override
   public void execute(){
     double[] move = null;
-    
     // Get target pid output
     move = m_VisionSubsystem.AimingSPEAKER();
     // Move drivebase

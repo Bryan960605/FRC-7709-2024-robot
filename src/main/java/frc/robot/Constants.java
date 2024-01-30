@@ -54,7 +54,7 @@ public final class Constants {
     public static final String Limelight = "";
   }
   /* Motor Controller CAN ID */
-  public static class MotorControllerIDs{
+  public static final class MotorControllerIDs{
     // Intake-Shooter
     public static final int kShooterMotorLeftID = 3;
     public static final int kShooterMotorRightID = 4; 
@@ -67,13 +67,13 @@ public final class Constants {
     public static final int kArmMotorRightID = 2;
   }
   /* Digital Input */
-  public static class DigitalInputPin{
+  public static final class DigitalInputPin{
     public static final int kIRsensorDIO = 0;
     public static final int kLeftClimiberLimitSwitch = 1;
     public static final int kRightClimiberLimitSwitch = 2;
   }
   /* PWM Output */
-  public static class PWMOutputPin{
+  public static final class PWMOutputPin{
     public static final int kLeftClimberServo = 0;
     public static final int kRightClimberServo = 1;  
   }
@@ -170,18 +170,27 @@ public final class Constants {
     else if(-value < -maxOutput) return -maxOutput;
     else return value;
   }
+  /* Aiming Setpoints */
+  public static final class AimingSetpoint{
+    // Speaker
+    public static final double[] SPEAKER = {0, 0, 0};
+    // Amp
+    public static final double[] AMP = {0, 0, 0};
+    // Source
+    public static final double[] SOURCE = {0, 0, 0};
+  }
   /* April Tag Constants */
   public static final class ApriltagIDs{
     public static final int RedSpeakerCenter = 4;
     public static final int RedSpeakerSide = 3;
     public static final int RedAMPID = 5;
-    public static final int RedSourceR = 9;
-    public static final int RedSourceL = 10;
+    public static final int RedSourceInside = 1;
+    public static final int RedSourceOutside = 2;
     public static final int BlueSpeakerCenter = 7;
     public static final int BlueSpeakerSide = 8;
     public static final int BlueAMPID = 6;
-    public static final int BlueSourceR = 1;
-    public static final int BlueSourceL = 2;
+    public static final int BlueSourceInside = 10;
+    public static final int BlueSourceOutside = 9;
     public static final double speakerZSetpoint = 0.0;
     public static final double speakerHeight = 204.5;//cm
     public static final double armHeight = 0;
@@ -195,10 +204,10 @@ public final class Constants {
           return isBlue ? BlueSpeakerSide : RedSpeakerSide;
         case "Amp":
           return isBlue ? BlueAMPID : RedAMPID;
-        case "RightSource":
-          return isBlue ? BlueSourceR : RedSourceR;
-        case "LeftSource":
-          return isBlue ? BlueSourceL : RedSourceL;
+        case "SourceInside":
+          return isBlue ? BlueSourceInside : RedSourceInside;
+        case "SourceOutside":
+          return isBlue ? BlueSourceOutside : RedSourceOutside;
         default:
           return 0;
       }

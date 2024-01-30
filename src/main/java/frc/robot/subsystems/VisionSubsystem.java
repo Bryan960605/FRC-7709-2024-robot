@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.AimingSetpoint;
 import frc.robot.Constants.ApriltagIDs;
 import frc.robot.Constants.CameraType;
 
@@ -78,7 +79,7 @@ public class VisionSubsystem extends SubsystemBase {
     return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter");
   }
   public boolean isOurSource(){
-    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SpeakerCenter");
+    return getBestTagID()==ApriltagIDs.getApriltagID(isBlueAlliance(), "SourceInside");
   }
 
   public double[] AimingSPEAKER(){
@@ -89,9 +90,9 @@ public class VisionSubsystem extends SubsystemBase {
       double targetY = getTarget3dPose().getY();
       double targetYaw = getTargetYaw();
       // PID calculation
-      Output[0] = xMovePID.calculate(targetX, 0);
-      Output[1] = yMovePID.calculate(targetY, 0);
-      Output[2] = -zTurnPID.calculate(targetYaw, 0);
+      Output[0] = xMovePID.calculate(targetX, AimingSetpoint.SPEAKER[0]);
+      Output[1] = yMovePID.calculate(targetY, AimingSetpoint.SPEAKER[1]);
+      Output[2] = -zTurnPID.calculate(targetYaw, AimingSetpoint.SPEAKER[2]);
       // // Bounded      
       // Output[0] = Constants.setMaxOutput(xPidOutput, maxXMovepPIDOutput);
       // Output[1] = Constants.setMaxOutput(yPidOutput, maxYMovePIDOutput);
@@ -104,7 +105,52 @@ public class VisionSubsystem extends SubsystemBase {
     }
     return Output;
   }
-
+  public double[] AimingAMP(){
+    double[] Output = {0};
+    if(isTargetGet() && isOurSpeaker()){ 
+      // Get target measurement
+      double targetX = getTarget3dPose().getX();
+      double targetY = getTarget3dPose().getY();
+      double targetYaw = getTargetYaw();
+      // PID calculation
+      Output[0] = xMovePID.calculate(targetX, AimingSetpoint.AMP[0]);
+      Output[1] = yMovePID.calculate(targetY, AimingSetpoint.AMP[1]);
+      Output[2] = -zTurnPID.calculate(targetYaw, AimingSetpoint.AMP[2]);
+      // // Bounded      
+      // Output[0] = Constants.setMaxOutput(xPidOutput, maxXMovepPIDOutput);
+      // Output[1] = Constants.setMaxOutput(yPidOutput, maxYMovePIDOutput);
+      // Output[2] = Constants.setMaxOutput(yawPidOutput, maxTurnPIDOutput);
+    }else{
+      // No target in sight
+      Output[0] = 0;
+      Output[1] = 0;
+      Output[2] = 0;
+    }
+    return Output;
+  }
+  public double[] AimingSOURCE(){
+    double[] Output = {0};
+    if(isTargetGet() && isOurAmp()){ 
+      // Get target measurement
+      double targetX = getTarget3dPose().getX();
+      double targetY = getTarget3dPose().getY();
+      double targetYaw = getTargetYaw();
+      // PID calculation
+      Output[0] = xMovePID.calculate(targetX, AimingSetpoint.SPEAKER[0]);
+      Output[1] = yMovePID.calculate(targetY, AimingSetpoint.SPEAKER[1]);
+      Output[2] = -zTurnPID.calculate(targetYaw, AimingSetpoint.SPEAKER[2]);
+      // // Bounded      
+      // Output[0] = Constants.setMaxOutput(xPidOutput, maxXMovepPIDOutput);
+      // Output[1] = Constants.setMaxOutput(yPidOutput, maxYMovePIDOutput);
+      // Output[2] = Constants.setMaxOutput(yawPidOutput, maxTurnPIDOutput);
+    }else{
+      // No target in sight
+      Output[0] = 0;
+      Output[1] = 0;
+      Output[2] = 0;
+    }
+    return Output;
+  }
   @Override
   public void periodic() {
     Latestresult = photonCamera.getLatestResult();
