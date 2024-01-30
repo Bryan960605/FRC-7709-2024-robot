@@ -8,27 +8,25 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
+  /* Field Objects */
+  public enum FieldObject {
+    SPEAKER_CENTER,
+    BLUE_SPEAKER_SIDE,
+    RED_SPEAKER_SIDE,
+    AMP,
+    SOURCE_INSIDE,
+    SOURCE_OUTSIDE,
+    Unknown
+}
   /* Robot Parameter */
   public static final double robotLength = Units.inchesToMeters(25.5);
   public static final double robotWidth = Units.inchesToMeters(25.5);
   /* Operator IO */
   public static class OperatorConstants {
+    public static final double kJoystickDeadband = 0.05;
     public static final int kDriverJoystickrPort = 0;
     public static final int kOperatorJoystickrPort = 1;
-    public static final double kJoystickDeadband = 0.05;
-    public static final int floorButton = 1;
-    public static final int shootButton = 2;
-    public static final int primetiveButton = 3;
-    public static final int takeButton = 4;
   }
   // Logitech Joystick D-Mode
   public static class LogitechJoystickLayout{
@@ -174,44 +172,72 @@ public final class Constants {
   /* Aiming Setpoints */
   public static final class AimingSetpoint{
     // Speaker
-    public static final double[] SPEAKER = {0, 0, 0};
+    public static final double[] Speaker_Center_Setpoint = {0, 0, 0};
+    public static final double[] Blue_Speaker_Side_Setpoint = {0, 0, 0};
+    public static final double[] Red_Speaker_Side_Setpoint = {0, 0, 0};
     // Amp
-    public static final double[] AMP = {0, 0, 0};
+    public static final double[] Amp_Setpoint = {0, 0, 0};
     // Source
-    public static final double[] SOURCE = {0, 0, 0};
-  }
-  /* April Tag Constants */
-  public static final class ApriltagIDs{
-    public static final int RedSpeakerCenter = 4;
-    public static final int RedSpeakerSide = 3;
-    public static final int RedAMPID = 5;
-    public static final int RedSourceInside = 1;
-    public static final int RedSourceOutside = 2;
-    public static final int BlueSpeakerCenter = 7;
-    public static final int BlueSpeakerSide = 8;
-    public static final int BlueAMPID = 6;
-    public static final int BlueSourceInside = 10;
-    public static final int BlueSourceOutside = 9;
-    public static final double speakerZSetpoint = 0.0;
-    public static final double speakerHeight = 204.5;//cm
-    public static final double armHeight = 0;
-    public static final double limelightToArmDistance = 0;
-    // ID Selector
-    public static int getApriltagID(boolean isBlue, String target){
-      switch(target){
-        case "SpeakerCenter":
-          return isBlue ? BlueSpeakerCenter : RedSpeakerCenter;
-        case "SpeakerSide":
-          return isBlue ? BlueSpeakerSide : RedSpeakerSide;
-        case "Amp":
-          return isBlue ? BlueAMPID : RedAMPID;
-        case "SourceInside":
-          return isBlue ? BlueSourceInside : RedSourceInside;
-        case "SourceOutside":
-          return isBlue ? BlueSourceOutside : RedSourceOutside;
+    public static final double[] Source_Inside_Setpoint = {0, 0, 0};
+    public static final double[] Source_Outside_Setpoint = {0, 0, 0};
+    // Setpoint Selector
+    public static double[] setpointSelector(FieldObject targetPosition){
+      switch(targetPosition){
+        case SPEAKER_CENTER:
+          return Speaker_Center_Setpoint;
+        case RED_SPEAKER_SIDE:
+          return Red_Speaker_Side_Setpoint;
+        case BLUE_SPEAKER_SIDE:
+          return Blue_Speaker_Side_Setpoint;
+        case AMP:
+          return Amp_Setpoint;
+        case SOURCE_INSIDE:
+          return Source_Inside_Setpoint;
+        case SOURCE_OUTSIDE:
+          return Source_Outside_Setpoint;
         default:
-          return 0;
+          return null;
       }
     }
   }
+  /* April Tag Constants */
+  public static final class ApriltagIDs{
+    public static final int RedSourceInside = 1;
+    public static final int RedSourceOutside = 2;
+    public static final int RedSpeakerSide = 3;
+    public static final int RedSpeakerCenter = 4;
+    public static final int RedAMPID = 5;
+
+    public static final int BlueAMPID = 6;
+    public static final int BlueSpeakerCenter = 7;
+    public static final int BlueSpeakerSide = 8;
+    public static final int BlueSourceOutside = 9;
+    public static final int BlueSourceInside = 10;
+    // Target Selector
+    public static FieldObject getIDType(int id) {
+      switch (id) {
+        case ApriltagIDs.RedSpeakerCenter:
+        case ApriltagIDs.BlueSpeakerCenter:
+          return FieldObject.SPEAKER_CENTER;
+        case ApriltagIDs.RedSpeakerSide:
+          return FieldObject.RED_SPEAKER_SIDE;
+        case ApriltagIDs.BlueSpeakerSide:
+          return FieldObject.BLUE_SPEAKER_SIDE;
+        case ApriltagIDs.RedAMPID:
+        case ApriltagIDs.BlueAMPID:
+          return FieldObject.AMP;
+        case ApriltagIDs.RedSourceInside:
+        case ApriltagIDs.BlueSourceInside:
+          return FieldObject.SOURCE_INSIDE;
+        case ApriltagIDs.RedSourceOutside:
+        case ApriltagIDs.BlueSourceOutside:
+          return FieldObject.SOURCE_OUTSIDE;
+        default:
+          return FieldObject.Unknown;
+      }
+    }
+    public static final double speakerZSetpoint = 0.0;
+    public static final double speakerHeight = 204.5;//cm
+  }
+  
 }

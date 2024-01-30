@@ -5,10 +5,7 @@
 package frc.robot;
 
 import java.util.function.DoubleSupplier;
-
-import com.fasterxml.jackson.databind.cfg.CoercionConfigs;
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimingAMP;
-import frc.robot.commands.AimingSpeaker;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.TurnLeftTest;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -62,14 +58,13 @@ public class RobotContainer {
     m_swerveSubsystem.setDefaultCommand(driveCommand);
     /* Trun Robot Test */
     turnBtn.whileTrue(new TurnLeftTest(m_swerveSubsystem));
-    /* Aiming Speaker */
+    /* Aiming */
     AimingBtn.whileTrue(new AimingAMP(m_swerveSubsystem, m_VisionSubsystem));
+    /* Reset Gyro */
     ZeroingGyro.onTrue(
       new RunCommand(
-        ()->{
-          m_swerveSubsystem.resetGyro();
-        })
-    );
+        ()->{m_swerveSubsystem.resetGyro();}
+    ));
   }
 
   public Command getAutonomousCommand() {

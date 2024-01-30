@@ -11,7 +11,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveModuleConstants;
 
@@ -27,9 +26,6 @@ public class SwerveModule extends SubsystemBase{
 
     private final CANcoder absoluteEncoder;
     private final CANcoderConfiguration cancoderConfig;
-
-    private double setpointangle;
-    private double angle;
 
     public SwerveModule(int driveMotorID, int turningMotorID, boolean driveMotorReversed, boolean turningMotorReversed, 
                         int absoluteEncoderID, double absoluteEncoderOffsetDegree){
@@ -98,8 +94,6 @@ public class SwerveModule extends SubsystemBase{
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.set(state.speedMetersPerSecond);
         turningMotor.set(turningPIDController.calculate(getState().angle.getDegrees(),state.angle.getDegrees()));
-        setpointangle = state.angle.getDegrees();
-        angle = getState().angle.getDegrees();
     }
 
 
