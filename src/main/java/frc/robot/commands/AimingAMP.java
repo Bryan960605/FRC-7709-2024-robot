@@ -25,9 +25,9 @@ public class AimingAMP extends Command {
   public AimingAMP(SwerveSubsystem swerveSubsystem, VisionSubsystem visionSubsystem) {
     this.m_SwerveSubsystem = swerveSubsystem;
     this.m_VisionSubsystem = visionSubsystem;
-    xAimPID = new PIDController(0.030, 0, 0);
-    yAimPID = new PIDController(0.05, 0, 0);
-    zAimPID = new PIDController(0.005, 0, 0);
+    xAimPID = new PIDController(0.6, 0, 0);
+    yAimPID = new PIDController(0.6, 0, 0);
+    zAimPID = new PIDController(0.4, 0, 0);
     addRequirements(m_SwerveSubsystem, m_VisionSubsystem);
   }
 
@@ -59,12 +59,16 @@ public class AimingAMP extends Command {
         // Calculate
         vX = xAimPID.calculate(targetX, setpoint[0]);
         vY = yAimPID.calculate(targetY, setpoint[1]);
-        vZ = -zAimPID.calculate(targetYaw, setpoint[2]);
+        vZ = zAimPID.calculate(targetYaw, setpoint[2]);
+        // Deadband
+        vX = Math.abs(vX)<0.05 ? 0 : vX;
+        vY = Math.abs(vY)<0.05 ? 0 : vY;
+        vZ = Math.abs(vZ)<0.05 ? 0 : vZ;
         // Move Drivebase
         SmartDashboard.putNumber("vX_Output", vX);
-        SmartDashboard.putNumber("vX_Output", vY);
-        SmartDashboard.putNumber("vX_Output", vZ);
-        // m_SwerveSubsystem.drive(vX, vY, vZ, false);
+        SmartDashboard.putNumber("vY_Output", vY);
+        SmartDashboard.putNumber("vZ_Output", vZ);
+        m_SwerveSubsystem.drive(vX, vY, vZ, false);
       }
     }else{
       m_SwerveSubsystem.stopModules();

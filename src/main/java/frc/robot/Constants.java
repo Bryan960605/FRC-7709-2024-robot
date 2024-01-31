@@ -118,9 +118,9 @@ public final class Constants {
     public static final double turningEncoderRot2Rad = turningMotorGearRatio*2*Math.PI;
     public static final double driveEncoderRPM2MeterPerSec = driveEncoderRot2Meter/60.0;
     public static final double turningEncoderRPM2RadPerSec = turningEncoderRot2Rad/60.0;
-    public static final double turningMotorkP = 0.01;
 
-    public static final double maxDriveMotorSpeed = 0.5;
+    public static final double turningMotorkP = 0.01;
+    public static final double maxDriveMotorSpeed = 0.15;
   }
   /* Swerve Drivebase Constants */
   public static final class SwerveConstants{
@@ -154,8 +154,6 @@ public final class Constants {
     public static final double leftRearOffset = 0.151;
     public static final double rightRearOffset = -0.379;
 
-    // public static final double maxWheelSpeed = 0.5;
-
     //front left, front right, rear left, rear right
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
       new Translation2d(robotLength/2, robotWidth/2), 
@@ -171,12 +169,13 @@ public final class Constants {
   }
   /* Aiming Setpoints */
   public static final class AimingSetpoint{
+    // Unit = {target_x:meters, target_y:meters, targetYaw:rad}
     // Speaker
     public static final double[] Speaker_Center_Setpoint = {0, 0, 0};
     public static final double[] Blue_Speaker_Side_Setpoint = {0, 0, 0};
     public static final double[] Red_Speaker_Side_Setpoint = {0, 0, 0};
     // Amp
-    public static final double[] Amp_Setpoint = {0, 0, 0};
+    public static final double[] Amp_Setpoint = {1, 0, 0};
     // Source
     public static final double[] Source_Inside_Setpoint = {0, 0, 0};
     public static final double[] Source_Outside_Setpoint = {0, 0, 0};

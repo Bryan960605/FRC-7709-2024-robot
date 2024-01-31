@@ -9,6 +9,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,15 +31,12 @@ public class VisionSubsystem extends SubsystemBase {
   public VisionSubsystem() {
     photonCamera = new PhotonCamera(CameraType.HD3000);
   }
- 
   public boolean isTargetGet(){
     return hasTarget;
   }
-
   public PhotonPipelineResult getLatestResult(){
     return Latestresult;
   }
-
   public PhotonTrackedTarget getBestTarget(){
     return BestTarget;
   }
@@ -58,26 +56,29 @@ public class VisionSubsystem extends SubsystemBase {
       return color==Alliance.Red;
     else return false;
   }
-
   /* Get Target Pose */
   public Transform3d getTarget3dPose(){
     // Units:meter
     return BestTarget.getBestCameraToTarget();
   }
   public double getTargetYaw(){
-    return BestTarget.getYaw();
+    return Math.IEEEremainder(BestTarget.getBestCameraToTarget().getRotation().getZ(), Math.PI);
+    // return Units.radiansToDegrees(BestTarget.getBestCameraToTarget().getRotation().getZ())-180;
   }
 
   @Override
   public void periodic() {
     Latestresult = photonCamera.getLatestResult();
     BestTarget = Latestresult.getBestTarget();
+    hasTarget = Latestresult.hasTargets();
     if(isTargetGet()){
       targetID = BestTarget.getFiducialId();
       SmartDashboard.putBoolean("HasTarget", true);
       SmartDashboard.putNumber("TargetID", getTargetID());
       SmartDashboard.putNumber("TargetX", getTarget3dPose().getX());
       SmartDashboard.putNumber("TargetY", getTarget3dPose().getY());
+      SmartDashboard.putNumber("RawZ", BestTarget.getYaw());
+      SmartDashboard.putNumber("RawPoseZ", BestTarget.getBestCameraToTarget().getRotation().getZ());
       SmartDashboard.putNumber("TargetZ", getTargetYaw());
     }else{
       SmartDashboard.putBoolean("HasTarget", false);
