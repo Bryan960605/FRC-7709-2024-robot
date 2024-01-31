@@ -11,9 +11,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraType;
 
@@ -79,8 +77,6 @@ public class VisionSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("TargetID", getTargetID());
       SmartDashboard.putNumber("TargetX", getTarget3dPose().getX());
       SmartDashboard.putNumber("TargetY", getTarget3dPose().getY());
-      SmartDashboard.putNumber("RawZ", BestTarget.getYaw());
-      SmartDashboard.putNumber("RawPoseZ", BestTarget.getBestCameraToTarget().getRotation().getZ());
       SmartDashboard.putNumber("TargetZ", getTargetYaw());
     }else{
       SmartDashboard.putBoolean("HasTarget", false);

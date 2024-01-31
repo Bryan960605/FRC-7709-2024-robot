@@ -45,7 +45,7 @@ public class RobotContainer {
     JoystickButton notfieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
     JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
     JoystickButton AimingBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_RIGHT_BUMPER);
-    JoystickButton ZeroingGyro = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_X);
+    JoystickButton ZeroingGyroBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_X);
     // Drive Command
     Command driveCommand = new DriveCommand(
       m_swerveSubsystem,
@@ -61,7 +61,7 @@ public class RobotContainer {
     /* Aiming */
     AimingBtn.whileTrue(new DriveAimingTarget(m_swerveSubsystem, m_VisionSubsystem));
     /* Reset Gyro */
-    ZeroingGyro.onTrue(
+    ZeroingGyroBtn.onTrue(
       new RunCommand(
         ()->{m_swerveSubsystem.resetGyro();}
     ));
