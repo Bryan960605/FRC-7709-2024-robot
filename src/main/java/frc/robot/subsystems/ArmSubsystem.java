@@ -26,9 +26,6 @@ public class ArmSubsystem extends SubsystemBase {
   //Motor
   private final CANSparkMax armMotor1 = new CANSparkMax(1, MotorType.kBrushless);
   private final CANSparkMax armMotor2 = new CANSparkMax(2, MotorType.kBrushless);
-  private final CANSparkMax shooterMotor1 = new CANSparkMax(3, MotorType.kBrushless);
-  private final CANSparkMax shooterMotor2 = new CANSparkMax(4, MotorType.kBrushless);
-  private final CANSparkMax intakeMotor = new CANSparkMax(5, MotorType.kBrushless);
   //Eancoder
   private final CANcoder armCancoder = new CANcoder(0);
   private final CANcoderConfiguration cancoderConfig = new CANcoderConfiguration();
@@ -58,52 +55,19 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor2.follow(armMotor1);
     armMotor1.restoreFactoryDefaults();
     armMotor2.restoreFactoryDefaults();
-    intakeMotor.restoreFactoryDefaults();
-    shooterMotor1.restoreFactoryDefaults();
-    shooterMotor2.restoreFactoryDefaults();
 
     armMotor1.setIdleMode(IdleMode.kBrake);
     armMotor2.setIdleMode(IdleMode.kBrake);
-    intakeMotor.setIdleMode(IdleMode.kBrake);
-    shooterMotor1.setIdleMode(IdleMode.kBrake);
-    shooterMotor2.setIdleMode(IdleMode.kBrake);
 
     armMotor1.setInverted(false);
     armMotor2.setInverted(false);
-    intakeMotor.setInverted(false);
-    shooterMotor1.setInverted(false);
-    shooterMotor2.setInverted(false);
 
     armMotor1.burnFlash();
     armMotor2.burnFlash();
-    intakeMotor.burnFlash();
-    shooterMotor1.burnFlash();
-    shooterMotor2.burnFlash();
 
     cancoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     cancoderConfig.MagnetSensor.MagnetOffset = absoluteEncoderOffset;
     cancoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-  }
-
-  public void take(){
-    intakeMotor.set(0.5);
-  }
-
-  public void shoot(){
-    shooterMotor1.set(0.5);
-    shooterMotor2.set(0.5);
-    if(shooterMotor1.getEncoder().getVelocity() > 2900){
-      intakeMotor.set(0.5);
-    }
-    else{
-      intakeMotor.set(0);
-    }
-  }
-
-  public void stop(){
-    intakeMotor.set(0);
-    shooterMotor1.set(0);
-    shooterMotor2.set(0);
   }
 
   public void armPIDCalculate(double setpoint){

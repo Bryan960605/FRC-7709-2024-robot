@@ -15,8 +15,8 @@ public class ClimbSubsystem extends SubsystemBase {
   //Motor
   private final CANSparkMax climberMotor1 = new CANSparkMax(5, MotorType.kBrushed);
   private final CANSparkMax climberMotor2 = new CANSparkMax(6, MotorType.kBrushed);
-  //Servo
-  private final Servo holdingMotor = new Servo(0);
+  private final Servo leftServo = new Servo(0);
+  private final Servo rightSevo = new Servo(9);
 
   public static boolean climb = false;
 
@@ -30,24 +30,29 @@ public class ClimbSubsystem extends SubsystemBase {
     climberMotor1.burnFlash();
     climberMotor2.burnFlash();
   }
+  
+  public void climbTrueOrFalse(){
+    if(climb == true){
+      climb = false;
+    }
+    else{
+      climb = true;
+    }
+  }
 
   public void climb(double leftSpeed, double rightSpeed){
     climberMotor1.set(leftSpeed);
     climberMotor2.set(rightSpeed);
   }
-
-  public void climbDone(){
-    holdingMotor.setAngle(90);
-    climb = true;
-  }
-
-  public void climbfalse(){
-    holdingMotor.setAngle(0);
-  }
-
-
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if(climb == true){
+      leftServo.setAngle(0);
+      rightSevo.setAngle(0);
+    }
+    else{
+      leftServo.setAngle(90);
+      rightSevo.setAngle(-90);
+    }
   }
 }

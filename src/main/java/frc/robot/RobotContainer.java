@@ -49,7 +49,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     climbDoneButton.onTrue(Commands.run(()->{
-      m_climbSubsystem.climbDone();
+      m_climbSubsystem.climbTrueOrFalse();;
     }, m_climbSubsystem));
 
     resetButton.onTrue(Commands.runOnce(()->{

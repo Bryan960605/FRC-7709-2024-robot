@@ -38,7 +38,6 @@ public class ArmCommand extends Command {
         mode = "floor";
         break;
       case shootButton:
-        armSubsystem.shoot();
         armSubsystem.armPIDCalculate(armSubsystem.armAimSetpoint);
         mode = "shoot";
         break;
@@ -47,7 +46,6 @@ public class ArmCommand extends Command {
         mode = "primetive";
         break;
       case takeButton:
-        armSubsystem.take();
         armSubsystem.armPIDCalculate(Constants.ArmConstants.armTaking);
         mode = "take";
         break;

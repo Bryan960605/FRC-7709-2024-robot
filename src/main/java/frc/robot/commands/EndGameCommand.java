@@ -20,13 +20,11 @@ public class EndGameCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climbsubsystem.climbfalse();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climbsubsystem.climb(armJoystick.getRawAxis(1)*0.3, armJoystick.getRawAxis(5)*0.3);
   }
 
   // Called once the command ends or is interrupted.
