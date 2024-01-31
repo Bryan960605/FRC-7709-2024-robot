@@ -13,7 +13,7 @@ import frc.robot.Constants.FieldObject;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
-public class AimingAMP extends Command {
+public class DriveAimingTarget extends Command {
   private SwerveSubsystem m_SwerveSubsystem;
   private VisionSubsystem m_VisionSubsystem;
   /* PID Controller */
@@ -22,7 +22,7 @@ public class AimingAMP extends Command {
   private final PIDController zAimPID;
   private double vX, vY, vZ;
 
-  public AimingAMP(SwerveSubsystem swerveSubsystem, VisionSubsystem visionSubsystem) {
+  public DriveAimingTarget(SwerveSubsystem swerveSubsystem, VisionSubsystem visionSubsystem) {
     this.m_SwerveSubsystem = swerveSubsystem;
     this.m_VisionSubsystem = visionSubsystem;
     xAimPID = new PIDController(0.6, 0, 0);

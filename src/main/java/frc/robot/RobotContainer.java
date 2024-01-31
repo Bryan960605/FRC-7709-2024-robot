@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AimingAMP;
+import frc.robot.commands.DriveAimingTarget;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.TurnLeftTest;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -59,7 +59,7 @@ public class RobotContainer {
     /* Trun Robot Test */
     turnBtn.whileTrue(new TurnLeftTest(m_swerveSubsystem));
     /* Aiming */
-    AimingBtn.whileTrue(new AimingAMP(m_swerveSubsystem, m_VisionSubsystem));
+    AimingBtn.whileTrue(new DriveAimingTarget(m_swerveSubsystem, m_VisionSubsystem));
     /* Reset Gyro */
     ZeroingGyro.onTrue(
       new RunCommand(

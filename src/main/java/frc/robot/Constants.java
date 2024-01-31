@@ -171,14 +171,14 @@ public final class Constants {
   public static final class AimingSetpoint{
     // Unit = {target_x:meters, target_y:meters, targetYaw:rad}
     // Speaker
-    public static final double[] Speaker_Center_Setpoint = {0, 0, 0};
-    public static final double[] Blue_Speaker_Side_Setpoint = {0, 0, 0};
-    public static final double[] Red_Speaker_Side_Setpoint = {0, 0, 0};
+    public static final double[] Speaker_Center_Setpoint = {1, 0, 0};
+    public static final double[] Blue_Speaker_Side_Setpoint = {1, 0, 0};
+    public static final double[] Red_Speaker_Side_Setpoint = {1, 0, 0};
     // Amp
     public static final double[] Amp_Setpoint = {1, 0, 0};
     // Source
-    public static final double[] Source_Inside_Setpoint = {0, 0, 0};
-    public static final double[] Source_Outside_Setpoint = {0, 0, 0};
+    public static final double[] Source_Inside_Setpoint = {1, 0, 0};
+    public static final double[] Source_Outside_Setpoint = {1, 0, 0};
     // Setpoint Selector
     public static double[] setpointSelector(FieldObject targetPosition){
       switch(targetPosition){
