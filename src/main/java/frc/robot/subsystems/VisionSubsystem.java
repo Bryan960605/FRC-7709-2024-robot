@@ -17,7 +17,7 @@ import frc.robot.Constants.CameraType;
 
 public class VisionSubsystem extends SubsystemBase {
   // Camera
-  private final PhotonCamera photonCamera = new PhotonCamera(CameraType.HD3000);
+  private final PhotonCamera photonCamera;
   
   private final Optional<Alliance> alliance = DriverStation.getAlliance();
   
@@ -28,11 +28,7 @@ public class VisionSubsystem extends SubsystemBase {
   private int targetID;
 
   public VisionSubsystem() {
-
-  }
-
-  public boolean isBlueAlliance(){
-    return alliance.get()==Alliance.Blue;
+    photonCamera = new PhotonCamera(CameraType.HD3000);
   }
  
   public boolean isTargetGet(){
@@ -47,6 +43,7 @@ public class VisionSubsystem extends SubsystemBase {
     return BestTarget;
   }
   /* Target Info */
+  // Get target id
   public int getTargetID(){
     return targetID;
   }
@@ -61,6 +58,7 @@ public class VisionSubsystem extends SubsystemBase {
       return color==Alliance.Red;
     else return false;
   }
+
   /* Get Target Pose */
   public Transform3d getTarget3dPose(){
     // Units:meter
@@ -74,13 +72,13 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     Latestresult = photonCamera.getLatestResult();
     BestTarget = Latestresult.getBestTarget();
-    hasTarget = Latestresult.hasTargets();
     if(isTargetGet()){
       targetID = BestTarget.getFiducialId();
-      SmartDashboard.putBoolean("HasTarget", isTargetGet());
+      SmartDashboard.putBoolean("HasTarget", true);
       SmartDashboard.putNumber("TargetID", getTargetID());
       SmartDashboard.putNumber("TargetX", getTarget3dPose().getX());
       SmartDashboard.putNumber("TargetY", getTarget3dPose().getY());
+      SmartDashboard.putNumber("TargetZ", getTargetYaw());
     }else{
       SmartDashboard.putBoolean("HasTarget", false);
     }

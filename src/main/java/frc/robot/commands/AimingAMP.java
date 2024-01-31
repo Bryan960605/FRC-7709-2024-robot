@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AimingSetpoint;
 import frc.robot.Constants.ApriltagIDs;
@@ -60,7 +61,10 @@ public class AimingAMP extends Command {
         vY = yAimPID.calculate(targetY, setpoint[1]);
         vZ = -zAimPID.calculate(targetYaw, setpoint[2]);
         // Move Drivebase
-        m_SwerveSubsystem.drive(vX, vY, vZ, false);
+        SmartDashboard.putNumber("vX_Output", vX);
+        SmartDashboard.putNumber("vX_Output", vY);
+        SmartDashboard.putNumber("vX_Output", vZ);
+        // m_SwerveSubsystem.drive(vX, vY, vZ, false);
       }
     }else{
       m_SwerveSubsystem.stopModules();

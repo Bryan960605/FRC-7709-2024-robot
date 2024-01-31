@@ -9,6 +9,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -105,7 +106,6 @@ public class SwerveSubsystem extends SubsystemBase{
       );
       // Set up custom logging to add the current path to a field 2d widget
       PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
-       
     }
     public SwerveModulePosition[] getModulePosition(){
         return new SwerveModulePosition[]{
@@ -140,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase{
         SwerveModuleState[] states = null;
         if(isFieldOriented){
             states = swerveKinematics.toSwerveModuleStates(
-                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, gyro.getRotation2d()));
+                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, getHeadingRotation2d()));
         }else{
             states = swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, zSpeed));
         }
@@ -162,7 +162,13 @@ public class SwerveSubsystem extends SubsystemBase{
         mOdometry.resetPosition(gyro.getRotation2d(), getModulePosition(), pose);
     }
     public ChassisSpeeds getSpeeds() {
-        return swerveKinematics.toChassisSpeeds(getModuleStates());
+      return swerveKinematics.toChassisSpeeds(getModuleStates());
+    }
+    public double getHeading(){
+      return Math.IEEEremainder(gyro.getAngle(), 360);
+    }
+    public Rotation2d getHeadingRotation2d(){
+      return Rotation2d.fromDegrees(getHeading());
     }
     public void resetGyro(){
         gyro.reset();
@@ -178,7 +184,7 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("RF_Angle", rightFrontModule.getTurningPosition());
         SmartDashboard.putNumber("LF_Angle", leftFrontModule.getTurningPosition());
         SmartDashboard.putNumber("LR_Angle", leftRearModule.getTurningPosition());
-        SmartDashboard.putNumber("GyroReading", gyro.getAngle());
+        SmartDashboard.putNumber("GyroReading", getHeading());
     }
   
 }

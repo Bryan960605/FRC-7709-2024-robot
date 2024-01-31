@@ -218,19 +218,25 @@ public final class Constants {
       switch (id) {
         case ApriltagIDs.RedSpeakerCenter:
         case ApriltagIDs.BlueSpeakerCenter:
+          System.out.println("Target:BlueSpeakerSide");
           return FieldObject.SPEAKER_CENTER;
         case ApriltagIDs.RedSpeakerSide:
+          System.out.println("Target:RedSpeakerSide");
           return FieldObject.RED_SPEAKER_SIDE;
         case ApriltagIDs.BlueSpeakerSide:
+          System.out.println("Target:AMP");
           return FieldObject.BLUE_SPEAKER_SIDE;
         case ApriltagIDs.RedAMPID:
         case ApriltagIDs.BlueAMPID:
+          System.out.println("Target:AMP");
           return FieldObject.AMP;
         case ApriltagIDs.RedSourceInside:
         case ApriltagIDs.BlueSourceInside:
+          System.out.println("Target:SourceInside");
           return FieldObject.SOURCE_INSIDE;
         case ApriltagIDs.RedSourceOutside:
         case ApriltagIDs.BlueSourceOutside:
+          System.out.println("Target:SourceOutside");
           return FieldObject.SOURCE_OUTSIDE;
         default:
           return FieldObject.Unknown;
