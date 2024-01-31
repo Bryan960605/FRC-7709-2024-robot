@@ -8,8 +8,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.SwerveSubsystem;
-
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveCommand extends Command {
