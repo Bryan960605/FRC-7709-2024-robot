@@ -35,7 +35,7 @@ public class SwerveSubsystem extends SubsystemBase{
     private final Pigeon2 gyro = new Pigeon2(gyroID);
     private final Pigeon2Configuration gyroConfig = new Pigeon2Configuration();
     /* Odometer */
-    private SwerveDriveOdometry mOdometry;
+    private SwerveDriveOdometry odometer;
     /* Field 2D */
     private final Field2d field = new Field2d();
 
@@ -73,7 +73,7 @@ public class SwerveSubsystem extends SubsystemBase{
         rightRearCANCoderID, 
         rightRearOffset);
       /* Odometer Init */
-      mOdometry = new SwerveDriveOdometry(
+      odometer = new SwerveDriveOdometry(
           swerveKinematics, 
           gyro.getRotation2d(), 
           getModulePosition());
@@ -156,10 +156,10 @@ public class SwerveSubsystem extends SubsystemBase{
         setModuleStates(states);
     }
     public Pose2d getPose(){
-        return mOdometry.getPoseMeters();
+        return odometer.getPoseMeters();
     }
     public void setPose(Pose2d pose){
-        mOdometry.resetPosition(gyro.getRotation2d(), getModulePosition(), pose);
+        odometer.resetPosition(gyro.getRotation2d(), getModulePosition(), pose);
     }
     public ChassisSpeeds getSpeeds() {
       return swerveKinematics.toChassisSpeeds(getModuleStates());
@@ -172,7 +172,7 @@ public class SwerveSubsystem extends SubsystemBase{
     }
     @Override
     public void periodic(){
-        mOdometry.update(gyro.getRotation2d(), getModulePosition());
+        odometer.update(gyro.getRotation2d(), getModulePosition());
         SmartDashboard.putNumber("RR_DP", leftFrontModule.getDrivePosition());
         SmartDashboard.putNumber("RF_DP", leftRearModule.getDrivePosition());
         SmartDashboard.putNumber("LF_DP", rightFrontModule.getDrivePosition());

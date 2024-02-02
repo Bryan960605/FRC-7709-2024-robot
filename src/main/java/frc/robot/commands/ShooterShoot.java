@@ -3,9 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,7 +17,7 @@ public class ShooterShoot extends Command {
     this.m_ShooterSubsystem = intakeShooterSubsystem;
     /* PID Controller */
     shooterPID = new ProfiledPIDController(
-      0.0, 
+      0, 
       0, 
       0, 
       new TrapezoidProfile.Constraints(100, 20));

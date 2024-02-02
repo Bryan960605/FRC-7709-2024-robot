@@ -19,12 +19,12 @@ import frc.robot.Constants.MotorControllerIDs;
 
 public class ShooterSubsystem extends SubsystemBase {
   // Motor Controller
-  private final CANSparkMax shooterMotorLead;
-  // private final CANSparkMax shooterMotorFollow;
-  // private final CANSparkMax intakeMotor;
+  private final CANSparkMax shooterMotorLeft;
+  private final CANSparkMax shooterMotorRight;
+  private final CANSparkMax feedMotor;
   // NEO encoder
   private final RelativeEncoder leftMotorEncoder;
-  // private final RelativeEncoder rightMotorEncoder;
+  private final RelativeEncoder rightMotorEncoder;
   // Note Sensor
   private final DigitalInput IRsensor;
   // PID controller
@@ -36,30 +36,28 @@ public class ShooterSubsystem extends SubsystemBase {
     /* IR Sensor */
     IRsensor = new DigitalInput(DigitalInputPin.kIRsensorDIO);
     /* Motor Controller Initialize */
-    shooterMotorLead = new CANSparkMax(MotorControllerIDs.kShooterMotorLeftID, MotorType.kBrushless); // Leader
-    // shooterMotorFollow = new CANSparkMax(MotorControllerIDs.kShooterMotorRightID, MotorType.kBrushless); // Follower
-    // intakeMotor = new CANSparkMax(MotorControllerIDs.kIntakeMotorID, MotorType.kBrushless);
+    shooterMotorLeft = new CANSparkMax(MotorControllerIDs.kShooterMotorLeftID, MotorType.kBrushless); 
+    shooterMotorRight = new CANSparkMax(MotorControllerIDs.kShooterMotorRightID, MotorType.kBrushless); 
+    feedMotor = new CANSparkMax(MotorControllerIDs.kIntakeMotorID, MotorType.kBrushless);
     // Reset Setting
-    // intakeMotor.restoreFactoryDefaults();
-    shooterMotorLead.restoreFactoryDefaults();
-    // shooterMotorFollow.restoreFactoryDefaults();
+    feedMotor.restoreFactoryDefaults();
+    shooterMotorLeft.restoreFactoryDefaults();
+    shooterMotorRight.restoreFactoryDefaults();
     // Mode Setting
-    // intakeMotor.setIdleMode(IdleMode.kBrake);
-    shooterMotorLead.setIdleMode(IdleMode.kCoast);
-    // shooterMotorFollow.setIdleMode(IdleMode.kBrake);
+    feedMotor.setIdleMode(IdleMode.kBrake);
+    shooterMotorLeft.setIdleMode(IdleMode.kCoast);
+    shooterMotorRight.setIdleMode(IdleMode.kCoast);
     // Inverted
-    // intakeMotor.setInverted(false);
-    shooterMotorLead.setInverted(false);
-    // shooterMotorFollow.setInverted(false);
+    feedMotor.setInverted(false);
+    shooterMotorLeft.setInverted(false);
+    shooterMotorRight.setInverted(false);
     // // Burn Flash    
-    // intakeMotor.burnFlash();
-    // shooterMotorLead.burnFlash();
-    // shooterMotorFollow.burnFlash();
-    // Right motor will follow left motor
-    // shooterMotorFollow.follow(shooterMotorLead);
+    // feedMotor.burnFlash();
+    // shooterMotorLeft.burnFlash();
+    // shooterMotorRight.burnFlash();
     // Encoder
-    leftMotorEncoder = shooterMotorLead.getEncoder();
-    // rightMotorEncoder = shooterMotorFollow.getEncoder();
+    leftMotorEncoder = shooterMotorLeft.getEncoder();
+    rightMotorEncoder = shooterMotorRight.getEncoder();
     resetEncoder();
     // PID Controller
     shooterPidController = new PIDController(
@@ -68,39 +66,30 @@ public class ShooterSubsystem extends SubsystemBase {
       IntakeShooterConstants.kd);
   }
 
-  public void IntakeNote(){
-    // intakeMotor.set(0.5);
-  }
-
-  public void ShootAMP(){
-    // Calculate PID Output
-    double PidOutput = shooterPidController.calculate(getEncoderSpeed(), IntakeShooterConstants.kAmpRPM);
-    // Enable Shooter
-    shooterMotorLead.setVoltage(IntakeShooterConstants.kAmpBaseVolt + PidOutput);
-    // Feeding Note into Shooter
-    if(Math.abs(shooterPidController.getPositionError()) < 20) IntakeFeed();
+  public void FeedNote(){
+    feedMotor.setVoltage(2.5);
   }
 
   public void ShootSpeaker(){
     // Calculate PID Output
     double PidOutput = shooterPidController.calculate(getEncoderSpeed(), IntakeShooterConstants.kSpeakerRPM);
     // Enable Shooter
-    shooterMotorLead.setVoltage(IntakeShooterConstants.kSpeakerBaseVolt + PidOutput);
+    shooterMotorLeft.setVoltage(IntakeShooterConstants.kSpeakerBaseVolt + PidOutput);
     // Feeding Note into Shooter
     if(Math.abs(shooterPidController.getPositionError()) < 20) IntakeFeed();
   }
 
   public void IntakeFeed(){
-    // intakeMotor.set(0.2);
+    // feedMotor.set(0.2);
   }
 
   public void setShooterMotor(double value){
     out = value;
-    // shooterMotorLead.set(value);
+    // shooterMotorLeft.set(value);
   }
   
   public void setIntakeMotor(double value){
-    // intakeMotor.set(value);
+    // feedMotor.set(value);
   }
   
   // Reset EncoderS
@@ -118,19 +107,17 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stopShooter(){
-    // shooterMotorLead.set(0);
+    // shooterMotorLeft.set(0);
     out=0;
-    // shooterMotorFollow.set(0);
+    // shooterMotorRight.set(0);
   }
 
   public void stopIntake(){
-    // intakeMotor.set(0);
+    // feedMotor.set(0);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("MotorSpeed", getEncoderSpeed());
-    shooterMotorLead.set(out);
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("LeftMotorSpeed", getEncoderSpeed());
   }
 }
