@@ -54,8 +54,8 @@ public final class Constants {
   /* Motor Controller CAN ID */
   public static final class MotorControllerIDs{
     // Intake-Shooter
-    public static final int kShooterMotorLeftID = 3;
-    public static final int kShooterMotorRightID = 4; 
+    public static final int kShooterMotorLeftID = 19;
+    public static final int kShooterMotorRightID = 66; 
     public static final int kIntakeMotorID = 5;
     // Climber
     public static final int kClimberMotorLeftID = 5;

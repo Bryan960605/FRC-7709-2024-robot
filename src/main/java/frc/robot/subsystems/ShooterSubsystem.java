@@ -11,52 +11,55 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DigitalInputPin;
 import frc.robot.Constants.IntakeShooterConstants;
 import frc.robot.Constants.MotorControllerIDs;
 
-public class IntakeShooterSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
   // Motor Controller
   private final CANSparkMax shooterMotorLead;
-  private final CANSparkMax shooterMotorFollow;
-  private final CANSparkMax intakeMotor;
+  // private final CANSparkMax shooterMotorFollow;
+  // private final CANSparkMax intakeMotor;
   // NEO encoder
   private final RelativeEncoder leftMotorEncoder;
-  private final RelativeEncoder rightMotorEncoder;
+  // private final RelativeEncoder rightMotorEncoder;
   // Note Sensor
   private final DigitalInput IRsensor;
   // PID controller
   private final PIDController shooterPidController;
 
-  public IntakeShooterSubsystem() {
+  private double out=0;
+
+  public ShooterSubsystem() {
     /* IR Sensor */
     IRsensor = new DigitalInput(DigitalInputPin.kIRsensorDIO);
     /* Motor Controller Initialize */
     shooterMotorLead = new CANSparkMax(MotorControllerIDs.kShooterMotorLeftID, MotorType.kBrushless); // Leader
-    shooterMotorFollow = new CANSparkMax(MotorControllerIDs.kShooterMotorRightID, MotorType.kBrushless); // Follower
-    intakeMotor = new CANSparkMax(MotorControllerIDs.kIntakeMotorID, MotorType.kBrushless);
+    // shooterMotorFollow = new CANSparkMax(MotorControllerIDs.kShooterMotorRightID, MotorType.kBrushless); // Follower
+    // intakeMotor = new CANSparkMax(MotorControllerIDs.kIntakeMotorID, MotorType.kBrushless);
     // Reset Setting
-    intakeMotor.restoreFactoryDefaults();
+    // intakeMotor.restoreFactoryDefaults();
     shooterMotorLead.restoreFactoryDefaults();
-    shooterMotorFollow.restoreFactoryDefaults();
+    // shooterMotorFollow.restoreFactoryDefaults();
     // Mode Setting
-    intakeMotor.setIdleMode(IdleMode.kBrake);
-    shooterMotorLead.setIdleMode(IdleMode.kBrake);
-    shooterMotorFollow.setIdleMode(IdleMode.kBrake);
+    // intakeMotor.setIdleMode(IdleMode.kBrake);
+    shooterMotorLead.setIdleMode(IdleMode.kCoast);
+    // shooterMotorFollow.setIdleMode(IdleMode.kBrake);
     // Inverted
-    intakeMotor.setInverted(false);
+    // intakeMotor.setInverted(false);
     shooterMotorLead.setInverted(false);
-    shooterMotorFollow.setInverted(false);
-    // Burn Flash    
-    intakeMotor.burnFlash();
-    shooterMotorLead.burnFlash();
-    shooterMotorFollow.burnFlash();
+    // shooterMotorFollow.setInverted(false);
+    // // Burn Flash    
+    // intakeMotor.burnFlash();
+    // shooterMotorLead.burnFlash();
+    // shooterMotorFollow.burnFlash();
     // Right motor will follow left motor
-    shooterMotorFollow.follow(shooterMotorLead);
+    // shooterMotorFollow.follow(shooterMotorLead);
     // Encoder
     leftMotorEncoder = shooterMotorLead.getEncoder();
-    rightMotorEncoder = shooterMotorFollow.getEncoder();
+    // rightMotorEncoder = shooterMotorFollow.getEncoder();
     resetEncoder();
     // PID Controller
     shooterPidController = new PIDController(
@@ -66,7 +69,7 @@ public class IntakeShooterSubsystem extends SubsystemBase {
   }
 
   public void IntakeNote(){
-    intakeMotor.set(0.5);
+    // intakeMotor.set(0.5);
   }
 
   public void ShootAMP(){
@@ -88,21 +91,22 @@ public class IntakeShooterSubsystem extends SubsystemBase {
   }
 
   public void IntakeFeed(){
-    intakeMotor.set(0.2);
+    // intakeMotor.set(0.2);
   }
 
   public void setShooterMotor(double value){
-    shooterMotorLead.set(value);
+    out = value;
+    // shooterMotorLead.set(value);
   }
   
   public void setIntakeMotor(double value){
-    intakeMotor.set(value);
+    // intakeMotor.set(value);
   }
   
   // Reset EncoderS
   public void resetEncoder(){
     leftMotorEncoder.setPosition(0);
-    rightMotorEncoder.setPosition(0);
+    // rightMotorEncoder.setPosition(0);
   }
   // Return Motor Speed
   public double getEncoderSpeed(){
@@ -114,16 +118,19 @@ public class IntakeShooterSubsystem extends SubsystemBase {
   }
 
   public void stopShooter(){
-    shooterMotorLead.set(0);
-    shooterMotorFollow.set(0);
+    // shooterMotorLead.set(0);
+    out=0;
+    // shooterMotorFollow.set(0);
   }
 
   public void stopIntake(){
-    intakeMotor.set(0);
+    // intakeMotor.set(0);
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("MotorSpeed", getEncoderSpeed());
+    shooterMotorLead.set(out);
     // This method will be called once per scheduler run
   }
 }

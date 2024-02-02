@@ -41,7 +41,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public SwerveSubsystem(){
       /* Gyro Configuration */
-      gyroConfig.withMountPose(new MountPoseConfigs().withMountPoseYaw(90));
+      gyroConfig.withMountPose(new MountPoseConfigs().withMountPoseYaw(-90));
       gyro.getConfigurator().apply(gyroConfig);
       /* Create Modules */
       leftFrontModule = new SwerveModule(
@@ -165,7 +165,7 @@ public class SwerveSubsystem extends SubsystemBase{
       return swerveKinematics.toChassisSpeeds(getModuleStates());
     }
     public double getHeading(){
-      return Math.IEEEremainder(gyro.getAngle(), 360);
+      return gyro.getAngle();
     }
     public Rotation2d getHeadingRotation2d(){
       return Rotation2d.fromDegrees(getHeading());

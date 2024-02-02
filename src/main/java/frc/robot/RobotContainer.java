@@ -10,20 +10,24 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveAimingTarget;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ShooterShoot;
 import frc.robot.commands.TurnLeftTest;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
   //Subsystem
-  private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
+  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
   private final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   // Chooser
   private final SendableChooser<Command> autoChooser;
   //Joystick
@@ -46,24 +50,27 @@ public class RobotContainer {
     JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
     JoystickButton AimingBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_RIGHT_BUMPER);
     JoystickButton ZeroingGyroBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_X);
+    JoystickButton ShootBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_Y);
     // Drive Command
     Command driveCommand = new DriveCommand(
-      m_swerveSubsystem,
+      m_SwerveSubsystem,
       driverLeftStickX,
       driverLeftStickY,
       driverRightStickX,
       !notfieldOrientedBtn.getAsBoolean()
     );
     // Set Default Command
-    m_swerveSubsystem.setDefaultCommand(driveCommand);
+    m_SwerveSubsystem.setDefaultCommand(driveCommand);
     /* Trun Robot Test */
-    turnBtn.whileTrue(new TurnLeftTest(m_swerveSubsystem));
+    turnBtn.whileTrue(new TurnLeftTest(m_SwerveSubsystem));
     /* Aiming */
-    AimingBtn.whileTrue(new DriveAimingTarget(m_swerveSubsystem, m_VisionSubsystem));
+    AimingBtn.whileTrue(new DriveAimingTarget(m_SwerveSubsystem, m_VisionSubsystem));
+    /* Shoot Test */
+    // ShootBtn.toggleOnTrue(new ShooterShoot(m_ShooterSubsystem));
     /* Reset Gyro */
     ZeroingGyroBtn.onTrue(
-      new RunCommand(
-        ()->{m_swerveSubsystem.resetGyro();}
+      Commands.runOnce(
+        ()->{m_SwerveSubsystem.resetGyro();}
     ));
   }
 
