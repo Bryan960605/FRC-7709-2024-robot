@@ -46,7 +46,7 @@ public class RobotContainer {
     DoubleSupplier driverLeftStickY = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_LEFT_X);
     DoubleSupplier driverRightStickX = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_RIGHT_X);
     // Buttons
-    JoystickButton notfieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
+    // JoystickButton notfieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
     JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
     JoystickButton AimingBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_RIGHT_BUMPER);
     JoystickButton ZeroingGyroBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_X);
@@ -57,7 +57,7 @@ public class RobotContainer {
       driverLeftStickX,
       driverLeftStickY,
       driverRightStickX,
-      !notfieldOrientedBtn.getAsBoolean()
+      true
     );
     // Set Default Command
     m_SwerveSubsystem.setDefaultCommand(driveCommand);

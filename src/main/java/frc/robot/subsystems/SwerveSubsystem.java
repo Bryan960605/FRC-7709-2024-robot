@@ -140,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase{
         SwerveModuleState[] states = null;
         if(isFieldOriented){
             states = swerveKinematics.toSwerveModuleStates(
-                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, getHeadingRotation2d()));
+                ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, zSpeed, getHeading()));
         }else{
             states = swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, zSpeed));
         }
@@ -164,11 +164,8 @@ public class SwerveSubsystem extends SubsystemBase{
     public ChassisSpeeds getSpeeds() {
       return swerveKinematics.toChassisSpeeds(getModuleStates());
     }
-    public double getHeading(){
-      return gyro.getAngle();
-    }
-    public Rotation2d getHeadingRotation2d(){
-      return Rotation2d.fromDegrees(getHeading());
+    public Rotation2d getHeading(){
+      return gyro.getRotation2d();
     }
     public void resetGyro(){
         gyro.reset();
@@ -184,7 +181,7 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("RF_Angle", rightFrontModule.getTurningPosition());
         SmartDashboard.putNumber("LF_Angle", leftFrontModule.getTurningPosition());
         SmartDashboard.putNumber("LR_Angle", leftRearModule.getTurningPosition());
-        SmartDashboard.putNumber("GyroReading", getHeading());
+        SmartDashboard.putNumber("GyroReading", getHeading().getDegrees());
     }
   
 }
