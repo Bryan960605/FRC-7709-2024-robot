@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -13,7 +14,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ApriltagIDs;
 import frc.robot.Constants.CameraType;
+import frc.robot.Constants.FieldObject;
 
 public class VisionSubsystem extends SubsystemBase {
   // Camera
@@ -43,6 +46,10 @@ public class VisionSubsystem extends SubsystemBase {
   // Get target id
   public int getTargetID(){
     return targetID;
+  }
+  // Get Target Type
+  public FieldObject getTargetType(){
+    return (isTargetGet())? ApriltagIDs.getIDType(getTargetID()) : FieldObject.Unknown;
   }
   // Get Target Alliance
   public boolean isOurAlliance(int ID){

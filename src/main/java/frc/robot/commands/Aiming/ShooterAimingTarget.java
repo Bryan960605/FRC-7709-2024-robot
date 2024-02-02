@@ -2,35 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Aiming;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class TurnLeftTest extends Command {
-  private SwerveSubsystem m_SwerveSubsystem;
-
-  public TurnLeftTest(SwerveSubsystem SwerveSubsystem) {
-    this.m_SwerveSubsystem = SwerveSubsystem;
-    addRequirements(m_SwerveSubsystem);
+public class ShooterAimingTarget extends Command {
+  private ShooterSubsystem m_ShooterSubsystem;
+  /** Creates a new ShooterAimingTarget. */
+  public ShooterAimingTarget(ShooterSubsystem shooterSubsystem) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_ShooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_SwerveSubsystem.drive(0, 0, 0.2, true);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_SwerveSubsystem.drive(0, 0, 0, true);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

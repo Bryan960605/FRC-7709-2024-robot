@@ -15,10 +15,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveAimingTarget;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.ShooterShoot;
-import frc.robot.commands.TurnLeftTest;
+import frc.robot.commands.Aiming.DriveAimingTarget;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -35,6 +33,7 @@ public class RobotContainer {
   public static final XboxController driverJoystick = new XboxController(OperatorConstants.kDriverJoystickrPort);
 
   public RobotContainer() {
+    /* Auto Path Chooser */
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto mode", autoChooser);
     configureBindings();
@@ -47,7 +46,6 @@ public class RobotContainer {
     DoubleSupplier driverRightStickX = () -> driverJoystick.getRawAxis(LogitechJoystickLayout.AXIS_RIGHT_X);
     // Buttons
     // JoystickButton notfieldOrientedBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_LEFT_BUMPER);
-    JoystickButton turnBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_B);
     JoystickButton AimingBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_RIGHT_BUMPER);
     JoystickButton ZeroingGyroBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_X);
     JoystickButton ShootBtn = new JoystickButton(driverJoystick, LogitechJoystickLayout.BTN_Y);
@@ -61,8 +59,6 @@ public class RobotContainer {
     );
     // Set Default Command
     m_SwerveSubsystem.setDefaultCommand(driveCommand);
-    /* Trun Robot Test */
-    turnBtn.whileTrue(new TurnLeftTest(m_SwerveSubsystem));
     /* Aiming */
     AimingBtn.whileTrue(new DriveAimingTarget(m_SwerveSubsystem, m_VisionSubsystem));
     /* Shoot Test */

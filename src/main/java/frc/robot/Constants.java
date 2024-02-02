@@ -11,12 +11,14 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   /* Field Objects */
   public enum FieldObject {
+    SPEAKER,
     SPEAKER_CENTER,
     BLUE_SPEAKER_SIDE,
     RED_SPEAKER_SIDE,
     AMP,
     SOURCE_INSIDE,
     SOURCE_OUTSIDE,
+    TRAP,
     Unknown
 }
   /* Robot Parameter */
@@ -53,10 +55,9 @@ public final class Constants {
   }
   /* Motor Controller CAN ID */
   public static final class MotorControllerIDs{
-    // Intake-Shooter
-    public static final int kShooterMotorLeftID = 19;
-    public static final int kShooterMotorRightID = 66; 
-    public static final int kIntakeMotorID = 5;
+    // Shooter
+    public static final int kShooterMotorID = 19;
+    public static final int kFeedMotorID = 5;
     // Climber
     public static final int kClimberMotorLeftID = 5;
     public static final int kClimberMotorRightID = 6;
@@ -75,35 +76,27 @@ public final class Constants {
     public static final int kLeftClimberServo = 0;
     public static final int kRightClimberServo = 1;  
   }
-  /* Arm Constants */
+  /* Intake Constants */
   public static final class ArmConstants{
-    public static final double armGearRatio = 1/0.0;
-    public static final double armOrigin = 0.908;
-    public static final double armTaking = 0.0;
-    public static final double kArmMaxOutput = 0.3;
-    public static final double KArmEncoderOffset = 0;
     // Feedforward
     public static final double kS = 0;
     public static final double kG = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
     // PID Constants
     public static final double kp = 0;
     public static final double ki = 0;
     public static final double kd = 0;
     // Set Angle Degree
-    public static final double idleInsideAngle = 60;
-    public static final double IdleOutsideAngle = 20;
-    public static final double ampAngle = 92;
-    public static final double groundIntakeAngle = 0;
+    public static final double kidleAngle = 20;
+    public static final double kgroundIntakeAngle = 60;
   }
-  /* Intak-Shooter Constants */
-  public static final class IntakeShooterConstants{
+  /* Shooter Constants */
+  public static final class ShooterConstants{
     // Shooter PID
     public static final double kp = 0.0;
     public static final double ki = 0.0;
     public static final double kd = 0.0;
     // Constants
+    public static final double kFeedNotePercent = 2.5;
     public static final double kSpeakerBaseVolt = 5;
     public static final double kSpeakerRPM = 4000;
     public static final double kAmpBaseVolt = 4;

@@ -3,58 +3,67 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldObject;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShooterShoot extends Command {
   private final ShooterSubsystem m_ShooterSubsystem;
-  private final ProfiledPIDController shooterPID;
-  public ShooterShoot(ShooterSubsystem intakeShooterSubsystem) {
+  private final FieldObject m_target;
+  // Variable
+  private double setVoltage = 0;
+
+  public ShooterShoot(ShooterSubsystem shooterSubsystem, FieldObject Target) {
     /* Subsystem */
-    this.m_ShooterSubsystem = intakeShooterSubsystem;
-    /* PID Controller */
-    shooterPID = new ProfiledPIDController(
-      0, 
-      0, 
-      0, 
-      new TrapezoidProfile.Constraints(100, 20));
+    this.m_ShooterSubsystem = shooterSubsystem;
+    this.m_target = Target;
+    // Choose Setpoint
+    switch (m_target) {
+      case SPEAKER:
+        setVoltage = ShooterConstants.kSpeakerBaseVolt;
+        break;
+      case AMP:
+        setVoltage = ShooterConstants.kAmpBaseVolt;
+        break;
+      default:
+        setVoltage = 0.0;
+        break;
+    }
+    /* Add requirement */
     addRequirements(m_ShooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.stopIntake();
-    // m_ShooterSubsystem.setShooterMotor(0.1);
+    // Soft Start
+    m_ShooterSubsystem.setShooter(0.1);
+    // Stop FeedMotor
+    m_ShooterSubsystem.stopFeedMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* Get wheel velocity and setpoint */
-    double wheelMeasurement = m_ShooterSubsystem.getEncoderSpeed();
-    double wheelsetpoint = 100;
-    double baseOutput = 0.5;
-    /* PID Calculation */
-    // double PIDoutput = shooterPID.calculate(wheelMeasurement, wheelsetpoint);
-    double PIDoutput = 0;
-    /* Output to Motor */
-    m_ShooterSubsystem.setShooterMotor(baseOutput + PIDoutput);
-    SmartDashboard.putNumber("OUTPUT", PIDoutput);
+    // Shooter Spin up
+    m_ShooterSubsystem.setShooter(setVoltage);
+    // Feed note when the speed is enough 
+    if(m_ShooterSubsystem.getShooterSpeed()>=ShooterConstants.kSpeakerRPM){
+      m_ShooterSubsystem.FeedNote();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.stopShooter();
+    m_ShooterSubsystem.stopMotors();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    // Retuen true to cancel this Command when the note was sent out
+    return m_ShooterSubsystem.getNoteState()==false;
   }
 }
