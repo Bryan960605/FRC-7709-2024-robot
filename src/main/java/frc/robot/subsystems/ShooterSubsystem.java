@@ -6,6 +6,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,8 +23,12 @@ public class ShooterSubsystem extends SubsystemBase {
   // Motor Controller
   private final CANSparkMax shooterMotor;
   private final CANSparkMax feedMotor;
+  private final CANSparkMax pivotMotor;
   // NEO encoder
   private final RelativeEncoder shooterEncoder;
+  // Pivot CAN Encoder
+  private final CANcoder pivotEncoder;
+  private final CANcoderConfiguration cancoder_cfg;
   // Note Sensor
   private final DigitalInput IRsensor;
 
@@ -30,21 +38,41 @@ public class ShooterSubsystem extends SubsystemBase {
     /* Motor Controller Initialize */
     shooterMotor = new CANSparkMax(MotorControllerIDs.kShooterMotorID, MotorType.kBrushless); 
     feedMotor = new CANSparkMax(MotorControllerIDs.kFeedMotorID, MotorType.kBrushless);
+    pivotMotor = new CANSparkMax(MotorControllerIDs.kShooterPivotMotorID, MotorType.kBrushless);
     // Reset Setting
     feedMotor.restoreFactoryDefaults();
     shooterMotor.restoreFactoryDefaults();
+    pivotMotor.restoreFactoryDefaults();
     // Mode Setting
     feedMotor.setIdleMode(IdleMode.kBrake);
     shooterMotor.setIdleMode(IdleMode.kCoast);
+    pivotMotor.setIdleMode(IdleMode.kBrake);
     // Inverted
     feedMotor.setInverted(false);
     shooterMotor.setInverted(false);
+    pivotMotor.setInverted(false);
     // // Burn Flash    
     // feedMotor.burnFlash();
     // shooterMotor.burnFlash();
+    // pivotMotor.burnFlash();
     // Encoder
     shooterEncoder = shooterMotor.getEncoder();
+    pivotEncoder = new CANcoder(ShooterConstants.kPivotCANcoderID);
+    // CANcoder Configuration
+    cancoder_cfg = new CANcoderConfiguration();
+    cancoder_cfg.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    cancoder_cfg.MagnetSensor.MagnetOffset = ShooterConstants.kPivotEncoderOffset;
+    cancoder_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    pivotEncoder.getConfigurator().apply(cancoder_cfg);
     resetEncoder();
+  }
+
+  public double getPivotAngle(){
+    return pivotEncoder.getAbsolutePosition().getValue()*180;
+  }
+
+  public double getPivotVelocity(){
+    return pivotEncoder.getVelocity().getValue(); //RPS
   }
 
   public void FeedNote(){

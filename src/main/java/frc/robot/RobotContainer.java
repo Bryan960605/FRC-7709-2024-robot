@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ShootNote;
 import frc.robot.commands.Aiming.DriveAimingTarget;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -28,6 +28,7 @@ public class RobotContainer {
   private final ShooterSubsystem m_ShooterSubsystem = new ShooterSubsystem();
   // Chooser
   private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Boolean> debugChooser;
   //Joystick
   public static final XboxController operatorJoysrick = new XboxController(OperatorConstants.kOperatorJoystickrPort);
   public static final XboxController driverJoystick = new XboxController(OperatorConstants.kDriverJoystickrPort);
@@ -36,7 +37,12 @@ public class RobotContainer {
     /* Auto Path Chooser */
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto mode", autoChooser);
+    debugChooser = new SendableChooser<>();
     configureBindings();
+  }
+
+  public void displayInfo(){
+    Constants.globalDebug = debugChooser.getSelected();
   }
 
   private void configureBindings() {
@@ -61,8 +67,8 @@ public class RobotContainer {
     m_SwerveSubsystem.setDefaultCommand(driveCommand);
     /* Aiming */
     AimingBtn.whileTrue(new DriveAimingTarget(m_SwerveSubsystem, m_VisionSubsystem));
-    /* Shoot Test */
-    // ShootBtn.toggleOnTrue(new ShooterShoot(m_ShooterSubsystem));
+    /* Aiming + Shoot Note */
+    ShootBtn.whileTrue(new ShootNote(m_SwerveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
     /* Reset Gyro */
     ZeroingGyroBtn.onTrue(
       Commands.runOnce(

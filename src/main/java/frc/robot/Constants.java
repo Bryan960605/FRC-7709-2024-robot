@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+  public static boolean globalDebug = true;
   /* Field Objects */
   public enum FieldObject {
     SPEAKER,
@@ -55,15 +56,16 @@ public final class Constants {
   }
   /* Motor Controller CAN ID */
   public static final class MotorControllerIDs{
+    // Intake
+    public static final int kIntakeMotorID = 0;
+    public static final int kIntakePivotMotorID = 0;
     // Shooter
     public static final int kShooterMotorID = 19;
     public static final int kFeedMotorID = 5;
+    public static final int kShooterPivotMotorID = 66;
     // Climber
     public static final int kClimberMotorLeftID = 5;
     public static final int kClimberMotorRightID = 6;
-    // Arm
-    public static final int kArmMotorLeftID = 1;
-    public static final int kArmMotorRightID = 2;
   }
   /* Digital Input */
   public static final class DigitalInputPin{
@@ -77,10 +79,14 @@ public final class Constants {
     public static final int kRightClimberServo = 1;  
   }
   /* Intake Constants */
-  public static final class ArmConstants{
+  public static final class IntakeConstants{
+    // CAN encoder
+    public static final int kIntakeCANcoderID = 666;
+    public static final double kEncoderOffset = 0;
     // Feedforward
     public static final double kS = 0;
     public static final double kG = 0;
+    public static final double kV = 0;
     // PID Constants
     public static final double kp = 0;
     public static final double ki = 0;
@@ -91,16 +97,22 @@ public final class Constants {
   }
   /* Shooter Constants */
   public static final class ShooterConstants{
+    // CAN coder
+    public static final int kPivotCANcoderID = 555;
+    public static final double kPivotEncoderOffset = 0;
     // Shooter PID
     public static final double kp = 0.0;
     public static final double ki = 0.0;
     public static final double kd = 0.0;
-    // Constants
+    // Motor Speed
     public static final double kFeedNotePercent = 2.5;
     public static final double kSpeakerBaseVolt = 5;
     public static final double kSpeakerRPM = 4000;
     public static final double kAmpBaseVolt = 4;
     public static final double kAmpRPM = 300;
+    // Angle
+    public static final double kAMP_Angle = 10;
+    public static final double kIdle_Angle = 0;
   }
   /* Swerve Module Constants */
   public static final class SwerveModuleConstants{
@@ -234,8 +246,6 @@ public final class Constants {
           return FieldObject.Unknown;
       }
     }
-    public static final double speakerZSetpoint = 0.0;
-    public static final double speakerHeight = 204.5;//cm
   }
   
 }
