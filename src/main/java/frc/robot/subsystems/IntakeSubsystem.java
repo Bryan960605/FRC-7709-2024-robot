@@ -65,6 +65,16 @@ public class IntakeSubsystem extends SubsystemBase {
       IntakeConstants.kV);
   }
 
+  public void Intake(){
+    intakeMotor.setVoltage(6);
+    setAngle = IntakeConstants.kIntakeDownAngle;
+  }
+
+  public void Eject(){
+    intakeMotor.setVoltage(-6);
+    setAngle = IntakeConstants.kIntakeUpAngle;
+  }
+
   public double getAngle(){
     return pivotCANcoder.getAbsolutePosition().getValueAsDouble()*180;
   }
@@ -85,7 +95,6 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.set(0);
     pivotMotor.set(0);
   }
-
 
   @Override
   public void periodic() {

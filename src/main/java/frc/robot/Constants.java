@@ -92,8 +92,8 @@ public final class Constants {
     public static final double ki = 0;
     public static final double kd = 0;
     // Set Angle Degree
-    public static final double kidleAngle = 20;
-    public static final double kgroundIntakeAngle = 60;
+    public static final double kIntakeUpAngle = 0;
+    public static final double kIntakeDownAngle = 100;
   }
   /* Shooter Constants */
   public static final class ShooterConstants{
