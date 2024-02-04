@@ -65,14 +65,19 @@ public class IntakeSubsystem extends SubsystemBase {
       IntakeConstants.kV);
   }
 
-  public void Intake(){
+  public void IntakeDown(){
     intakeMotor.setVoltage(6);
     setAngle = IntakeConstants.kIntakeDownAngle;
   }
 
+  public void IntakeUP(){
+    intakeMotor.setVoltage(0);
+    setAngle = IntakeConstants.kIntakeUpAngle;
+  }
+
   public void Eject(){
     intakeMotor.setVoltage(-6);
-    setAngle = IntakeConstants.kIntakeUpAngle;
+    setAngle = IntakeConstants.kIntakeDownAngle;
   }
 
   public double getAngle(){
