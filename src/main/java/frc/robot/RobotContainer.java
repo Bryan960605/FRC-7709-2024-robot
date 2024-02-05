@@ -16,8 +16,8 @@ import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.IntakeNoteGround;
-import frc.robot.commands.ShootNote;
 import frc.robot.commands.Aiming.DriveAimingTarget;
+import frc.robot.commands.Shooter.ShootNoteByTag;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -72,7 +72,7 @@ public class RobotContainer {
     /* Aiming */
     AimingBtn.whileTrue(new DriveAimingTarget(m_SwerveSubsystem, m_VisionSubsystem));
     /* Aiming + Shoot Note */
-    ShootBtn.whileTrue(new ShootNote(m_SwerveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
+    ShootBtn.whileTrue(new ShootNoteByTag(m_SwerveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
     /* Intake Note */
     IntakeBtn.toggleOnTrue(new IntakeNoteGround(m_IntakeSubsystem));
     /* Reset Gyro */

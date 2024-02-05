@@ -68,7 +68,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double getPivotAngle(){
-    return pivotEncoder.getAbsolutePosition().getValue()*180;
+    return pivotEncoder.getAbsolutePosition().getValue();
   }
 
   public double getPivotVelocity(){
@@ -116,6 +116,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void stopMotors(){
     shooterMotor.set(0);
     feedMotor.set(0);
+    pivotMotor.set(0);
   }
 
   @Override

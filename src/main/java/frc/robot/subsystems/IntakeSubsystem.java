@@ -67,17 +67,17 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void IntakeDown(){
     intakeMotor.setVoltage(6);
-    setAngle = IntakeConstants.kIntakeDownAngle;
+    setAngle(IntakeConstants.kIntakeDownAngle);
   }
 
   public void IntakeUP(){
     intakeMotor.setVoltage(0);
-    setAngle = IntakeConstants.kIntakeUpAngle;
+    setAngle(IntakeConstants.kIntakeUpAngle);
   }
 
   public void Eject(){
     intakeMotor.setVoltage(-6);
-    setAngle = IntakeConstants.kIntakeDownAngle;
+    setAngle( IntakeConstants.kIntakeDownAngle);
   }
 
   public double getAngle(){
@@ -94,6 +94,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void setAngle(double targetAngle){
     setAngle = targetAngle;
+    double pidOutput = pivotPID.calculate(getAngle(), setAngle);
+    // pidOutput = Math.abs(pidOutput)>0.5 ? 0.5 : pidOutput;
+    pivotMotor.set(pidOutput);
   }
 
   public void stopMotors(){
@@ -104,9 +107,7 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double pidOutput = pivotPID.calculate(getAngle(), setAngle);
-    pidOutput = Math.abs(pidOutput)>0.5 ? 0.5 : pidOutput;
-    pivotMotor.set(pidOutput);
+    // Data for debuging
     if(Constants.globalDebug){
       SmartDashboard.putNumber("IntakePivot", getAngle());
     }

@@ -66,6 +66,13 @@ public class VisionSubsystem extends SubsystemBase {
     // Units:meter
     return BestTarget.getBestCameraToTarget();
   }
+  public double calculateShooterAngle(){
+    double x = BestTarget.getBestCameraToTarget().getX();
+    double y = BestTarget.getBestCameraToTarget().getY();
+    double z = BestTarget.getBestCameraToTarget().getZ();
+    double dis = Math.sqrt(x*x+y*y);
+    return Math.atan(z/dis);
+  }
   public double getTargetYaw(){
     return Math.IEEEremainder(BestTarget.getBestCameraToTarget().getRotation().getZ(), Math.PI);
     // return Units.radiansToDegrees(BestTarget.getBestCameraToTarget().getRotation().getZ())-180;

@@ -111,8 +111,8 @@ public final class Constants {
     public static final double kAmpBaseVolt = 4;
     public static final double kAmpRPM = 300;
     // Angle
-    public static final double kAMP_Angle = 10;
-    public static final double kIdle_Angle = 0;
+    public static final double kAMP_Angle = Units.degreesToRadians(10);
+    public static final double kIdle_Angle = Units.degreesToRadians(0);
   }
   /* Swerve Module Constants */
   public static final class SwerveModuleConstants{

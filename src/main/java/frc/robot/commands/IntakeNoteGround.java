@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeNoteGround extends Command {
@@ -19,6 +20,12 @@ public class IntakeNoteGround extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_IntakeSubsystem.setAngle(IntakeConstants.kIntakeDownAngle);
+    // m_IntakeSubsystem.IntakeDown();
+  }
+
+  @Override
+  public void execute(){
     m_IntakeSubsystem.IntakeDown();
   }
 
