@@ -15,9 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.LogitechJoystickLayout;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.IntakeNoteGround;
 import frc.robot.commands.Aiming.DriveAimingTarget;
+import frc.robot.commands.Intake.IntakeNoteGround;
 import frc.robot.commands.Shooter.ShootNoteByTag;
+import frc.robot.commands.Shooter.ShooterShoot;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -31,7 +32,6 @@ public class RobotContainer {
   private final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   // Chooser
   private final SendableChooser<Command> autoChooser;
-  private final SendableChooser<Boolean> debugChooser;
   //Joystick
   public static final XboxController operatorJoysrick = new XboxController(OperatorConstants.kOperatorJoystickrPort);
   public static final XboxController driverJoystick = new XboxController(OperatorConstants.kDriverJoystickrPort);
@@ -40,12 +40,7 @@ public class RobotContainer {
     /* Auto Path Chooser */
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto mode", autoChooser);
-    debugChooser = new SendableChooser<>();
     configureBindings();
-  }
-
-  public void displayInfo(){
-    Constants.globalDebug = debugChooser.getSelected();
   }
 
   private void configureBindings() {
@@ -67,12 +62,13 @@ public class RobotContainer {
       driverRightStickX,
       true
     );
+    
     // Set Default Command
     m_SwerveSubsystem.setDefaultCommand(driveCommand);
     /* Aiming */
-    AimingBtn.whileTrue(new DriveAimingTarget(m_SwerveSubsystem, m_VisionSubsystem));
+    AimingBtn.whileTrue(new DriveAimingTarget(m_SwerveSubsystem, m_VisionSubsystem, false));
     /* Aiming + Shoot Note */
-    ShootBtn.whileTrue(new ShootNoteByTag(m_SwerveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
+    ShootBtn.whileTrue(new ShooterShoot(m_ShooterSubsystem, m_VisionSubsystem.getTargetType()));
     /* Intake Note */
     IntakeBtn.toggleOnTrue(new IntakeNoteGround(m_IntakeSubsystem));
     /* Reset Gyro */

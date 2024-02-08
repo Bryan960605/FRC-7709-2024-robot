@@ -28,9 +28,8 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANcoder pivotCANcoder;
   private final CANcoderConfiguration cancoder_cfg;
   private final ProfiledPIDController pivotPID;
-  private final ArmFeedforward pivotFeedforward;
   // Flag
-  private double setAngle = 0;
+  private double setpoint = 0;
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
@@ -58,26 +57,21 @@ public class IntakeSubsystem extends SubsystemBase {
       IntakeConstants.ki, 
       IntakeConstants.kd,
       new TrapezoidProfile.Constraints(1, 2));  // Rev/s、 Rev/s^2
-    // Feedforward
-    pivotFeedforward = new ArmFeedforward(
-      IntakeConstants.kS, 
-      IntakeConstants.kG,
-      IntakeConstants.kV);
   }
 
   public void IntakeDown(){
     intakeMotor.setVoltage(6);
-    setAngle(IntakeConstants.kIntakeDownAngle);
+    setpoint = IntakeConstants.kIntakeDownAngle;
   }
 
   public void IntakeUP(){
     intakeMotor.setVoltage(0);
-    setAngle(IntakeConstants.kIntakeUpAngle);
+    setpoint = IntakeConstants.kIntakeUpAngle;
   }
 
   public void Eject(){
-    intakeMotor.setVoltage(-6);
-    setAngle( IntakeConstants.kIntakeDownAngle);
+    intakeMotor.setVoltage(-10);
+    setpoint = IntakeConstants.kIntakeDownAngle;
   }
 
   public double getAngle(){
@@ -92,10 +86,10 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.set(val);
   }
 
-  public void setAngle(double targetAngle){
-    setAngle = targetAngle;
-    double pidOutput = pivotPID.calculate(getAngle(), setAngle);
-    // pidOutput = Math.abs(pidOutput)>0.5 ? 0.5 : pidOutput;
+  public void PidCalculation(double targetAngle){
+    double pidOutput = pivotPID.calculate(getAngle(), targetAngle);
+    pidOutput = Math.abs(pidOutput)>0.2 ? 0.2 : pidOutput;      // Max Output limit
+    pidOutput = pivotPID.getPositionError()<1 ? 0 : pidOutput;  // Small Error limit
     pivotMotor.set(pidOutput);
   }
 
@@ -107,9 +101,8 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    PidCalculation(setpoint);
     // Data for debuging
-    if(Constants.globalDebug){
-      SmartDashboard.putNumber("IntakePivot", getAngle());
-    }
+    SmartDashboard.putNumber("IntakePivot", getAngle());
   }
 }

@@ -9,7 +9,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-  public static boolean globalDebug = true;
   /* Field Objects */
   public enum FieldObject {
     SPEAKER,

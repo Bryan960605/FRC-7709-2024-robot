@@ -2,10 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeNoteGround extends Command {
@@ -13,21 +12,15 @@ public class IntakeNoteGround extends Command {
   /** Creates a new IntakeNoteGround. */
   public IntakeNoteGround(IntakeSubsystem intakeSubsystem) {
     this.m_IntakeSubsystem = intakeSubsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_IntakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_IntakeSubsystem.setAngle(IntakeConstants.kIntakeDownAngle);
-    // m_IntakeSubsystem.IntakeDown();
-  }
-
-  @Override
-  public void execute(){
     m_IntakeSubsystem.IntakeDown();
   }
+
 
   // Called once the command ends or is interrupted.
   @Override

@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Shooter;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Aiming.DriveAimingTarget;
 import frc.robot.commands.Aiming.ShooterAimingTarget;
