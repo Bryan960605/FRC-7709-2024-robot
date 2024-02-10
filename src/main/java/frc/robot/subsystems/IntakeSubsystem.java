@@ -86,6 +86,10 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeMotor.set(val);
   }
 
+  public boolean isDown(){
+    return getAngle()>=IntakeConstants.kIntakeDownAngle ?  true : false;
+  }
+
   public void PidCalculation(double targetAngle){
     double pidOutput = pivotPID.calculate(getAngle(), targetAngle);
     pidOutput = Math.abs(pidOutput)>0.2 ? 0.2 : pidOutput;      // Max Output limit

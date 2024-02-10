@@ -6,19 +6,23 @@ package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class IntakeNoteGround extends Command {
   private final IntakeSubsystem m_IntakeSubsystem;
+  private final ShooterSubsystem m_ShooterSubsystem;
   /** Creates a new IntakeNoteGround. */
-  public IntakeNoteGround(IntakeSubsystem intakeSubsystem) {
+  public IntakeNoteGround(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem) {
     this.m_IntakeSubsystem = intakeSubsystem;
-    addRequirements(m_IntakeSubsystem);
+    this.m_ShooterSubsystem = shooterSubsystem;
+    addRequirements(m_IntakeSubsystem, m_ShooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     m_IntakeSubsystem.IntakeDown();
+    m_ShooterSubsystem.FeedNote();
   }
 
 

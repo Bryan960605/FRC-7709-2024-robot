@@ -45,7 +45,7 @@ public class ShooterAimingTarget extends Command {
       int targetID = m_VisionSubsystem.getTargetID();
       FieldObject TargetType = ApriltagIDs.getIDType(targetID);
       // Make sure it's Our alliance
-      if(m_VisionSubsystem.isOurAlliance(targetID)){
+      if(m_VisionSubsystem.isOurAlliance(targetID) && TargetType!=FieldObject.AMP){
         System.out.println("Aiming");
         // Get Setpoint
         double TargetAngle = m_VisionSubsystem.calculateShooterAngle();

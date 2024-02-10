@@ -17,7 +17,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.Aiming.DriveAimingTarget;
 import frc.robot.commands.Intake.IntakeNoteGround;
-import frc.robot.commands.Shooter.ShootNoteByTag;
 import frc.robot.commands.Shooter.ShooterShoot;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -62,7 +61,7 @@ public class RobotContainer {
       driverRightStickX,
       true
     );
-    
+
     // Set Default Command
     m_SwerveSubsystem.setDefaultCommand(driveCommand);
     /* Aiming */
@@ -70,7 +69,7 @@ public class RobotContainer {
     /* Aiming + Shoot Note */
     ShootBtn.whileTrue(new ShooterShoot(m_ShooterSubsystem, m_VisionSubsystem.getTargetType()));
     /* Intake Note */
-    IntakeBtn.toggleOnTrue(new IntakeNoteGround(m_IntakeSubsystem));
+    IntakeBtn.toggleOnTrue(new IntakeNoteGround(m_IntakeSubsystem, m_ShooterSubsystem));
     /* Reset Gyro */
     ZeroingGyroBtn.onTrue(
       Commands.runOnce(
