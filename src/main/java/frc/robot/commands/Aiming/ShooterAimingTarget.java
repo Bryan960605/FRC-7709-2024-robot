@@ -4,32 +4,23 @@
 
 package frc.robot.commands.Aiming;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.AimingSetpoint;
 import frc.robot.Constants.ApriltagIDs;
 import frc.robot.Constants.FieldObject;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.ShooterPivotSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class ShooterAimingTarget extends Command {
-  private final ShooterSubsystem m_ShooterSubsystem;
+  private final ShooterPivotSubsystem m_ShooterPivotSubsystem;
   private final VisionSubsystem m_VisionSubsystem;
-  private final PIDController m_PidController;
-
   private double output=0;
 
   /** Creates a new ShooterAimingTarget. */
-  public ShooterAimingTarget(ShooterSubsystem shooterSubsystem, VisionSubsystem visionSubsystem) {
-    this.m_ShooterSubsystem = shooterSubsystem;
+  public ShooterAimingTarget(ShooterPivotSubsystem shooterPivotSubsystem, VisionSubsystem visionSubsystem) {
+    this.m_ShooterPivotSubsystem = shooterPivotSubsystem;
     this.m_VisionSubsystem = visionSubsystem;
-    m_PidController = new PIDController(
-      ShooterConstants.kp, 
-      ShooterConstants.ki, 
-      ShooterConstants.kd);
-    addRequirements(m_ShooterSubsystem, m_VisionSubsystem);
+    addRequirements(m_ShooterPivotSubsystem, m_VisionSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -49,15 +40,8 @@ public class ShooterAimingTarget extends Command {
         System.out.println("Aiming");
         // Get Setpoint
         double TargetAngle = m_VisionSubsystem.calculateShooterAngle();
-        // Calculate  
-        output = m_PidController.calculate(m_ShooterSubsystem.getPivotAngle(), TargetAngle);
-        // Deadband
-        output = Math.abs(output)<0.05 ? 0 : output;
-        // Move Drivebase
-        SmartDashboard.putNumber("vX_Output", output);
       }
     }else{
-      m_ShooterSubsystem.stopMotors();
       System.out.println("I'm seeing Nothing!");
     }
   }
