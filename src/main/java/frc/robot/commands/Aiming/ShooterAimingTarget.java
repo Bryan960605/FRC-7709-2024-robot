@@ -34,18 +34,20 @@ public class ShooterAimingTarget extends Command {
       System.out.println("Shooter saw a Target!");
       // Knowing what i'm aiming at.
       int targetID = m_VisionSubsystem.getTargetID();
-      FieldObject TargetType = ApriltagIDs.getIDType(targetID);
-      // Make sure it's Our alliance
-      if(m_VisionSubsystem.isOurAlliance(targetID)){
+      FieldObject targetType = ApriltagIDs.getIDType(targetID);
+      if(targetType!=FieldObject.AMP && targetType!=FieldObject.SOURCE){
         System.out.println("Aiming");
         // Get Setpoint
         double TargetAngle = m_VisionSubsystem.calculateShooterAngle();
+        TargetAngle = Math.min(ShooterConstants.kShooterMaxAngle, Math.max(ShooterConstants.kShooterMinAngle, TargetAngle));
+        // SpinMotor
+        m_ShooterPivotSubsystem.setAngle(TargetAngle);
       }
     }else{
       m_ShooterPivotSubsystem.setAngle(ShooterConstants.kSPEAKER_Angle);
       System.out.println("I'm seeing Nothing!, In front of Speaker");
     }
-  }
+}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -54,6 +56,6 @@ public class ShooterAimingTarget extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return output==0;
+    return false;
   }
 }

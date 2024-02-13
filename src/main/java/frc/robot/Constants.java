@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -16,8 +17,7 @@ public final class Constants {
     BLUE_SPEAKER_SIDE,
     RED_SPEAKER_SIDE,
     AMP,
-    SOURCE_INSIDE,
-    SOURCE_OUTSIDE,
+    SOURCE,
     TRAP,
     Unknown
 }
@@ -102,13 +102,15 @@ public final class Constants {
     // Motor Speed
     public static final double kFeedNoteVal = 0.5;
     public static final double kSpeakerVal = 0.8;
-    public static final double kSpeakerRPM = 4000;
     public static final double kAmpVal = 0.4;
+    public static final double kSpeakerRPM = 4000;
     public static final double kAmpRPM = 300;
     // Angle
     public static final double kSPEAKER_Angle = 30;
     public static final double kAMP_Angle = 10;
     public static final double kIdle_Angle = 0;
+    public static final double kShooterMaxAngle = 0;
+    public static final double kShooterMinAngle = 0;
   }
   /* Swerve Module Constants */
   public static final class SwerveModuleConstants{
@@ -177,9 +179,21 @@ public final class Constants {
     public static final double[] Red_Speaker_Side_Setpoint = {1, 0, 0};
     // Amp
     public static final double[] Amp_Setpoint = {1, 0, 0};
-    // Source
-    public static final double[] Source_Inside_Setpoint = {1, 0, 0};
-    public static final double[] Source_Outside_Setpoint = {1, 0, 0};
+    // Setpoint Selector
+    // public static double[] setpointSelector(FieldObject targetPosition){
+    //   switch(targetPosition){
+    //     case SPEAKER_CENTER:
+    //       return Speaker_Center_Setpoint;
+    //     case RED_SPEAKER_SIDE:
+    //       return Red_Speaker_Side_Setpoint;
+    //     case BLUE_SPEAKER_SIDE:
+    //       return Blue_Speaker_Side_Setpoint;
+    //     case AMP:
+    //       return Amp_Setpoint;
+    //     default:
+    //       return null;
+    //   }
+    // }
     // Setpoint Selector
     public static double[] setpointSelector(FieldObject targetPosition){
       switch(targetPosition){
@@ -191,10 +205,6 @@ public final class Constants {
           return Blue_Speaker_Side_Setpoint;
         case AMP:
           return Amp_Setpoint;
-        case SOURCE_INSIDE:
-          return Source_Inside_Setpoint;
-        case SOURCE_OUTSIDE:
-          return Source_Outside_Setpoint;
         default:
           return null;
       }
@@ -207,21 +217,27 @@ public final class Constants {
     public static final int RedSpeakerSide = 3;
     public static final int RedSpeakerCenter = 4;
     public static final int RedAMPID = 5;
+    public static final int RedTrapL = 11;
+    public static final int RedTrapM = 13;
+    public static final int RedTrapR = 12;
 
     public static final int BlueAMPID = 6;
     public static final int BlueSpeakerCenter = 7;
     public static final int BlueSpeakerSide = 8;
     public static final int BlueSourceOutside = 9;
     public static final int BlueSourceInside = 10;
+    public static final int BlueTrapL = 15;
+    public static final int BlueTrapM = 14;
+    public static final int BlueTrapR = 16;
     // Target Selector
     public static FieldObject getIDType(int id) {
       switch (id) {
         case ApriltagIDs.RedSpeakerCenter:
         case ApriltagIDs.BlueSpeakerCenter:
-          System.out.println("Target:BlueSpeakerCenter");
+          System.out.println("Target:Blue SpeakerCenter");
           return FieldObject.SPEAKER_CENTER;
         case ApriltagIDs.RedSpeakerSide:
-          System.out.println("Target:RedSpeakerSide");
+          System.out.println("Target:Red SpeakerSide");
           return FieldObject.RED_SPEAKER_SIDE;
         case ApriltagIDs.BlueSpeakerSide:
           System.out.println("Target:BLUE_SPEAKER_SIDE");
@@ -232,12 +248,18 @@ public final class Constants {
           return FieldObject.AMP;
         case ApriltagIDs.RedSourceInside:
         case ApriltagIDs.BlueSourceInside:
-          System.out.println("Target:SourceInside");
-          return FieldObject.SOURCE_INSIDE;
         case ApriltagIDs.RedSourceOutside:
         case ApriltagIDs.BlueSourceOutside:
-          System.out.println("Target:SourceOutside");
-          return FieldObject.SOURCE_OUTSIDE;
+          System.out.println("Target:Source");
+          return FieldObject.SOURCE;
+        case ApriltagIDs.BlueTrapL:
+        case ApriltagIDs.BlueTrapM:
+        case ApriltagIDs.BlueTrapR:
+        case ApriltagIDs.RedTrapL:
+        case ApriltagIDs.RedTrapM:
+        case ApriltagIDs.RedTrapR:
+          System.out.println("Target:Trap");
+          return FieldObject.TRAP;
         default:
           return FieldObject.Unknown;
       }
