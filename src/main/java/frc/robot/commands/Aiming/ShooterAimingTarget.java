@@ -36,13 +36,14 @@ public class ShooterAimingTarget extends Command {
       int targetID = m_VisionSubsystem.getTargetID();
       FieldObject TargetType = ApriltagIDs.getIDType(targetID);
       // Make sure it's Our alliance
-      if(m_VisionSubsystem.isOurAlliance(targetID) && TargetType!=FieldObject.AMP){
+      if(m_VisionSubsystem.isOurAlliance(targetID)){
         System.out.println("Aiming");
         // Get Setpoint
         double TargetAngle = m_VisionSubsystem.calculateShooterAngle();
       }
     }else{
-      System.out.println("I'm seeing Nothing!");
+      m_ShooterPivotSubsystem.setAngle(ShooterConstants.kSPEAKER_Angle);
+      System.out.println("I'm seeing Nothing!, In front of Speaker");
     }
   }
 

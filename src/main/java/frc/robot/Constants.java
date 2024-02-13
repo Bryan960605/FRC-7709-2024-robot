@@ -82,10 +82,6 @@ public final class Constants {
     // CAN encoder
     public static final int kIntakeCANcoderID = 666;
     public static final double kEncoderOffset = 0;
-    // Feedforward
-    public static final double kS = 0;
-    public static final double kG = 0;
-    public static final double kV = 0;
     // PID Constants
     public static final double kp = 0;
     public static final double ki = 0;
@@ -104,14 +100,15 @@ public final class Constants {
     public static final double ki = 0.0;
     public static final double kd = 0.0;
     // Motor Speed
-    public static final double kFeedNotePercent = 2.5;
-    public static final double kSpeakerBaseVolt = 5;
+    public static final double kFeedNoteVal = 0.5;
+    public static final double kSpeakerVal = 0.8;
     public static final double kSpeakerRPM = 4000;
-    public static final double kAmpBaseVolt = 4;
+    public static final double kAmpVal = 0.4;
     public static final double kAmpRPM = 300;
     // Angle
-    public static final double kAMP_Angle = Units.degreesToRadians(10);
-    public static final double kIdle_Angle = Units.degreesToRadians(0);
+    public static final double kSPEAKER_Angle = 30;
+    public static final double kAMP_Angle = 10;
+    public static final double kIdle_Angle = 0;
   }
   /* Swerve Module Constants */
   public static final class SwerveModuleConstants{
@@ -221,13 +218,13 @@ public final class Constants {
       switch (id) {
         case ApriltagIDs.RedSpeakerCenter:
         case ApriltagIDs.BlueSpeakerCenter:
-          System.out.println("Target:BlueSpeakerSide");
+          System.out.println("Target:BlueSpeakerCenter");
           return FieldObject.SPEAKER_CENTER;
         case ApriltagIDs.RedSpeakerSide:
           System.out.println("Target:RedSpeakerSide");
           return FieldObject.RED_SPEAKER_SIDE;
         case ApriltagIDs.BlueSpeakerSide:
-          System.out.println("Target:AMP");
+          System.out.println("Target:BLUE_SPEAKER_SIDE");
           return FieldObject.BLUE_SPEAKER_SIDE;
         case ApriltagIDs.RedAMPID:
         case ApriltagIDs.BlueAMPID:

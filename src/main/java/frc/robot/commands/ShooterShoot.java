@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldObject;
 import frc.robot.Constants.ShooterConstants;
@@ -21,10 +21,10 @@ public class ShooterShoot extends Command {
     // Choose Setpoint
     switch (m_target) {
       case SPEAKER:
-        setVoltage = ShooterConstants.kSpeakerBaseVolt;
+        setVoltage = ShooterConstants.kSpeakerVal;
         break;
       case AMP:
-        setVoltage = ShooterConstants.kAmpBaseVolt;
+        setVoltage = ShooterConstants.kAmpVal;
         break;
       default:
         setVoltage = 0.0;

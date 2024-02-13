@@ -16,17 +16,15 @@ import frc.robot.subsystems.VisionSubsystem;
 public class DriveAimingTarget extends Command {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final VisionSubsystem m_VisionSubsystem;
-  private final boolean m_onlyAngle;
   /* PID Controller */
   private final PIDController xAimPID;
   private final PIDController yAimPID;
   private final PIDController zAimPID;
   private double vX, vY, vZ;
 
-  public DriveAimingTarget(SwerveSubsystem swerveSubsystem, VisionSubsystem visionSubsystem, boolean onlyAngle) {
+  public DriveAimingTarget(SwerveSubsystem swerveSubsystem, VisionSubsystem visionSubsystem) {
     this.m_SwerveSubsystem = swerveSubsystem;
     this.m_VisionSubsystem = visionSubsystem;
-    this.m_onlyAngle = onlyAngle;
     // PID Setup
     xAimPID = new PIDController(0.6, 0, 0);
     yAimPID = new PIDController(0.6, 0, 0);
@@ -64,8 +62,8 @@ public class DriveAimingTarget extends Command {
         vY = yAimPID.calculate(targetY, setpoint[1]);
         vZ = zAimPID.calculate(targetYaw, setpoint[2]);
         // Deadband
-        vX = Math.abs(vX)<0.05 || m_onlyAngle ? 0 : vX;
-        vY = Math.abs(vY)<0.05 || m_onlyAngle ? 0 : vY;
+        vX = Math.abs(vX)<0.05? 0 : vX;
+        vY = Math.abs(vY)<0.05? 0 : vY;
         vZ = Math.abs(vZ)<0.05? 0 : vZ;
         // Move Drivebase
         SmartDashboard.putNumber("vX_Output", vX);

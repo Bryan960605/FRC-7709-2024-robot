@@ -59,12 +59,12 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void FeedNote(){
-    if(getNoteState()==false) feedMotor.set(ShooterConstants.kFeedNotePercent);
+    if(getNoteState()==false) feedMotor.set(ShooterConstants.kFeedNoteVal);
     else feedMotor.set(0);
   }
 
   public void EjectNote(){
-    feedMotor.set(-ShooterConstants.kFeedNotePercent);
+    feedMotor.set(-ShooterConstants.kFeedNoteVal);
   }
 
   public void setShooter(double value){ shooterMotor.set(value); }  
